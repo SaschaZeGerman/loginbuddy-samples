@@ -1,0 +1,48 @@
+#
+# This docker compose file is usable for demo purposes:
+#
+version: '3.4'
+services:
+
+  loginbuddy-democlient:
+    image: saschazegerman/loginbuddy-democlient:latest
+    container_name: democlient
+    restart: always
+    hostname: democlient.loginbuddy.net
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker-build/add-ons/democlient/server_http.xml:/opt/docker/server_http.xml
+      - ./docker-build/add-ons/democlient/loginbuddy_http.sh:/opt/docker/loginbuddy.sh
+    env_file:
+      - .env_http
+
+  loginbuddy-demoserver:
+    image: saschazegerman/loginbuddy-demoserver:latest
+    container_name: demoserver
+    restart: always
+    hostname: demoserver.loginbuddy.net
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker-build/add-ons/demoserver/server_http.xml:/opt/docker/server_http.xml
+      - ./docker-build/add-ons/demoserver/loginbuddy_http.sh:/opt/docker/loginbuddy.sh
+    env_file:
+      - .env_http
+
+  loginbuddy:
+    image: saschazegerman/loginbuddy:latest
+    container_name: loginbuddy
+    restart: always
+    hostname: local.loginbuddy.net
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./docker-build/add-ons/loginbuddy/server_http.xml:/opt/docker/server_http.xml
+      - ./docker-build/add-ons/loginbuddy/loginbuddy_http.sh:/opt/docker/loginbuddy.sh
+      - ./docker-build/add-ons/loginbuddy/web_http.xml:/usr/local/tomcat/webapps/ROOT/WEB-INF/web.xml
+      - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
+      - ./docker-build/add-ons/loginbuddy/config_http.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
+      - ./docker-build/add-ons/loginbuddy/discovery_http.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
+    env_file:
+      - .env_http
