@@ -34,4 +34,4 @@ keytool -genkey \
   -validity 365 \
   -keysize 2048 \
   -dname "CN=${HOSTNAME_LOGINBUDDY}" \
-  -ext san=dns:${HOSTNAME_LOGINBUDDY},dns:${DEMOSERVER_HOSTNAME},dns:${DEMOCLIENT_HOSTNAME},dns:loginbuddy-demoserver,dns:loginbuddy-democlient,dns:loginbuddy,dns:localhost
+  -ext san=dns:${HOSTNAME_LOGINBUDDY},dns:${DEMOSERVER_HOSTNAME},dns:${DEMOCLIENT_HOSTNAME},dns:localhost

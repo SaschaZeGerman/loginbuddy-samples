@@ -57,9 +57,9 @@
       "client_id": "loginbuddy_demoId",
       "client_secret": "loginbuddy_demoSecret",
       "authorization_endpoint": "https://demoserver.loginbuddy.net:8443/authorize",
-      "token_endpoint": "https://loginbuddy-demoserver:8443/token",
-      "userinfo_endpoint": "https://loginbuddy-demoserver:8443/userinfo",
-      "jwks_uri": "https://loginbuddy-demoserver:8443/jwks",
+      "token_endpoint": "https://demoserver.loginbuddy.net:8443/token",
+      "userinfo_endpoint": "https://demoserver.loginbuddy.net:8443/userinfo",
+      "jwks_uri": "https://demoserver.loginbuddy.net:8443/jwks",
       "scope": "openid profile email",
       "response_type": "code",
       "redirect_uri": "https://local.loginbuddy.net:8444/callback"
@@ -69,40 +69,40 @@
       "template": "google",
       "client_id": "",
       "client_secret": "",
-      "redirect_uri": "https://local.loginbuddy.net/callback"
+      "redirect_uri": "https://local.loginbuddy.net:8444/callback"
     },
     {
       "provider": "google_id_token",
       "template": "google_id_token",
       "client_id": "",
       "client_secret": "",
-      "redirect_uri": "https://local.loginbuddy.net/callback"
+      "redirect_uri": "https://local.loginbuddy.net:8444/callback"
     },
     {
       "provider": "github",
       "template": "github",
       "client_id": "",
       "client_secret": "",
-      "redirect_uri": "https://local.loginbuddy.net/callback"
+      "redirect_uri": "https://local.loginbuddy.net:8444/callback"
     },
     {
       "provider": "linkedin",
       "template": "linkedin",
       "client_id": "",
       "client_secret": "",
-      "redirect_uri": "https://local.loginbuddy.net/callback"
+      "redirect_uri": "https://local.loginbuddy.net:8444/callback"
     },
     {
       "provider": "apple",
       "template": "apple",
       "client_id": "",
       "client_secret": "",
-      "redirect_uri": "https://local.loginbuddy.net/callback"
+      "redirect_uri": "https://local.loginbuddy.net:8444/callback"
     },
     {
       "provider": "self-issued",
       "template": "self-issued",
-      "redirect_uri": "https://local.loginbuddy.net/callback"
+      "redirect_uri": "https://local.loginbuddy.net:8444/callback"
     },
     {
       "provider": "pingone",
@@ -111,7 +111,7 @@
       "openid_configuration_uri": "https://auth.pingone.com/{environmentId}/as/.well-known/openid-configuration",
       "client_id": "",
       "client_secret": "",
-      "redirect_uri": "https://local.loginbuddy.net/callback"
+      "redirect_uri": "https://local.loginbuddy.net:8444/callback"
     }
   ]
 }

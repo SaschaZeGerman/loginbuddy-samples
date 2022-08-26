@@ -14,5 +14,5 @@ grant codeBase "file:${catalina.home}/webapps/ROOT/-" {
     // required as of upgrade to tomcat with jdk11
     permission java.net.NetPermission "specifyStreamHandler";
 
-    permission java.net.SocketPermission "loginbuddy", "connect,resolve";
+    permission java.net.SocketPermission "local.loginbuddy.net", "connect,resolve";
 };
