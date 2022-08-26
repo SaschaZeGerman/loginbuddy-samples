@@ -1,0 +1,63 @@
+#
+# This docker compose file is usable for demo purposes:
+#
+version: '3.4'
+services:
+
+  loginbuddy-democlient:
+    image: saschazegerman/loginbuddy-democlient:latest
+    container_name: democlient
+    restart: always
+    hostname: democlient.loginbuddy.net
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "DEMOCLIENT_HOSTNAME=${DEMOCLIENT_HOSTNAME}"
+      - "DEMOCLIENT_LOCATION=${DEMOCLIENT_LOCATION}"
+      - "DEMOCLIENT_SSL_PORT=${DEMOCLIENT_SSL_PORT}"
+      - "DEMOCLIENT_LOCATION_LOGINBUDDY=${DEMOCLIENT_LOCATION_LOGINBUDDY}"
+    volumes:
+      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+
+  loginbuddy-demoserver:
+    image: saschazegerman/loginbuddy-demoserver:latest
+    container_name: demoserver
+    restart: always
+    hostname: demoserver.loginbuddy.net
+    ports:
+      - "8443:8443"
+    environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "DEMOSERVER_HOSTNAME=${DEMOSERVER_HOSTNAME}"
+      - "DEMOSERVER_LOCATION=${DEMOSERVER_LOCATION}"
+      - "DEMOSERVER_SSL_PORT=${DEMOSERVER_SSL_PORT}"
+    volumes:
+      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+
+  loginbuddy:
+    image: saschazegerman/loginbuddy:latest
+    container_name: loginbuddy
+    restart: always
+    hostname: local.loginbuddy.net
+    ports:
+      - "8444:8444"
+      - "8000:8000"
+    volumes:
+      - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
+      - ./docker-build/add-ons/loginbuddy/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
+      - ./docker-build/add-ons/loginbuddy/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
+      - ./docker-build/add-ons/loginbuddy/entrypoint.sh:/opt/docker/entrypoint.sh
+      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+    environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "SSL_PORT=${SSL_PORT}"
+      - "SUPPORT_OIDCDR=${SUPPORT_OIDCDR}"
+      - "HOSTNAME_LOGINBUDDY=${HOSTNAME_LOGINBUDDY}"
+    entrypoint: /opt/docker/entrypoint.sh
+
+  loginbuddy-oidcdr:
+    image: saschazegerman/loginbuddy-oidcdr:latest
+    container_name: loginbuddy-oidcdr
+    restart: always

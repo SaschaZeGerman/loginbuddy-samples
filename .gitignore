@@ -1,0 +1,27 @@
+# Compiled class file
+target/
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Mac
+.DS_Store
+
+# Intellij
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# files for local development
+dev
+!dev/.env_template
+.env*
