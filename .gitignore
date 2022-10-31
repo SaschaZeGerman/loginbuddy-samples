@@ -21,7 +21,6 @@ target/
 *.iws
 *.ipr
 
-# files for local development
-dev
-!dev/.env_template
+## files for local development
+dev/
 .env*

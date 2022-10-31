@@ -1,0 +1,24 @@
+#
+# The script 'initialize-dev-environment.sh' will copy this file as 'loginbuddy/.env'.
+# The script will also generate a private key for development purposes.
+# In addition, the password for the generated private key is copied into that .env file.
+#
+# NOTE: The file .env will be replaced whenever the script gets executed again!
+#
+# DO NOT MODIFY THIS FILE, MODIFY .env ONCE IT WAS CREATED!
+#
+# The assumption is that 'initialize-dev-environment.sh' gets executed only once in a while.
+# If you need to 'rescue' it, make a copy!
+#
+# Configure Loginbuddy with hostname, port and if OpenID Connect Dynamic Registrations should be enabled
+HOSTNAME_LOGINBUDDY=local.loginbuddy.net
+
+# Configure the demo client and tell it where to find Loginbuddy (mainly a copy from further up)
+# This may be redundant, but it keeps it simple
+DEMOCLIENT_LOCATION=http://democlient.loginbuddy.net
+DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net
+DEMOCLIENT_LOCATION_LOGINBUDDY=http://local.loginbuddy.net:8081
+
+# configure the demo server
+DEMOSERVER_LOCATION=http://demoserver.loginbuddy.net:8080
+DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net
