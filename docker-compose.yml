@@ -43,8 +43,8 @@ services:
       - ./docker-build/add-ons/loginbuddy/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
       - ./docker-build/add-ons/loginbuddy/server_loginbuddy.png:/usr/local/tomcat/webapps/ROOT/images/server_loginbuddy.png
       - ./docker-build/add-ons/loginbuddy/server_dynamic.png:/usr/local/tomcat/webapps/ROOT/images/server_dynamic.png
-      - ./docker-build/add-ons/loginbuddy/entrypoint.sh:/opt/docker/entrypoint.sh
       - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+      - ./docker-build/add-ons/loginbuddy/entrypoint.sh:/opt/docker/entrypoint.sh
     environment:
       - "SSL_PWD=${SSL_PWD}"
       - "SSL_PORT=8444"

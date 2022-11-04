@@ -22,6 +22,7 @@ fi
 
 # creating a keystore and generating a password for it
 #
+printf "given SSL_PWD: %s\n" ${SSL_PWD}
 UUID=${SSL_PWD}
 if [ -z "$UUID" ]
 then
@@ -40,10 +41,12 @@ fi
 #
 # Export the public certificates
 #
+printf "exporting demosetup.crt using %s as password\n" ${UUID}
 keytool -export -alias loginbuddy -file /usr/local/tomcat/ssl/demosetup.crt -keystore /usr/local/tomcat/ssl/loginbuddy.p12 -storepass ${UUID}
 
 # Import the certs as trusted certificates
 #
+printf "importing demosetup.crt as trusted cert\n"
 keytool -importcert -alias loginbuddy -file /usr/local/tomcat/ssl/demosetup.crt -storepass changeit -keystore $JAVA_HOME/lib/security/cacerts -trustcacerts -noprompt
 
 # Find the policy file that contains socket permissions and add them to the default catalina.policy file

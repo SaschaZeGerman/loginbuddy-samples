@@ -27,6 +27,9 @@ The instructions are made for Docker on a MacBook and may need to be adjusted fo
     - for MacBooks this would be done at: `/etc/hosts`
     - for Windows this would be done at: `C:\Windows\System32\drivers\etc\hosts`
 
+- `sh initilize-dev-environment.sh`  // once
+- `sh initilize-dev-tls-keypair.sh`  // at least once
+- 
 ### Custom Configuration Loader
 
 This testsuite is using a custom loader for loading clients and providers. The custom loader has been implemented in **src** directory.

@@ -49,7 +49,7 @@
     <Engine name="Catalina" defaultHost="@@hostname@@">
 
       <Host name="@@hostname@@" appBase="webapps" unpackWARs="true" autoDeploy="true">
-        <Alias>@@hostname_demoserver@@</Alias>
+        <Alias>@@hostname@@</Alias>
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
           prefix="access_log" suffix=".txt"
           pattern="%h %l %u %t &quot;%r&quot; %s %b"/>
