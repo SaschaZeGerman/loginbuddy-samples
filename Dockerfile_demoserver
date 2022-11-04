@@ -9,13 +9,17 @@ COPY net.loginbuddy.demoserver/target/demoserver-1.0.0 /usr/local/tomcat/webapps
 
 COPY docker-build/add-ons/demoserver/loginbuddy.sh /opt/docker/loginbuddy.sh
 COPY docker-build/add-ons/demoserver/permissions.policy /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
-COPY docker-build/add-ons/demoserver/server.xml /usr/local/tomcat/conf/server.xml
 COPY docker-build/add-ons/templates/hazelcastPermissions.policy /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/hazelcastPermissions.policy
+COPY docker-build/add-ons/server.xml /usr/local/tomcat/conf/server.xml
 
 # Create directory for holding SSL keys
 #
 RUN mkdir /usr/local/tomcat/ssl
 
-ENV HOSTNAME_LOGINBUDDY_DEMOSERVER demoserver.loginbuddy.net
+# Any of these may be overriden and set in the compose file
+#
+ENV DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443
+ENV DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net
+ENV DEMOSERVER_SSL_PORT=8443
 
 ENTRYPOINT ["/opt/docker/loginbuddy.sh"]

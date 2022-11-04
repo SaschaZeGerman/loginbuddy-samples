@@ -10,21 +10,13 @@
 # The assumption is that 'initialize-dev-environment.sh' gets executed only once in a while.
 # If you need to 'rescue' it, make a copy!
 #
-# Configure Loginbuddy with hostname, port and if OpenID Connect Dynamic Registrations should be enabled
+
+# These hostnames are used to generate the keypair for SSL/TLS connections during development
+# The DEMO... hostnames match values in Dockerfile_democlient and Dockerfile_demoserver
+# In order to use other hostnames, please also update those two dockerfiles AND the compose file.
+#
 HOSTNAME_LOGINBUDDY=local.loginbuddy.net
-SSL_PORT=8444
-SUPPORT_OIDCDR=true
-
-# Configure the demo client and tell it where to find Loginbuddy (mainly a copy from further up)
-# This may be redundant, but it keeps it simple
-DEMOCLIENT_LOCATION=https://democlient.loginbuddy.net
 DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net
-DEMOCLIENT_SSL_PORT=443
-DEMOCLIENT_LOCATION_LOGINBUDDY=https://local.loginbuddy.net:8444
-
-# configure the demo server
-DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443
 DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net
-DEMOSERVER_SSL_PORT=8443
 
 # the password for the shared private key used for SSL/ TLS

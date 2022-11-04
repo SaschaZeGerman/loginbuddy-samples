@@ -51,7 +51,7 @@
       <Host name="@@hostname@@" appBase="webapps" unpackWARs="true" autoDeploy="true">
         <Alias>@@hostname_demoserver@@</Alias>
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
-          prefix="democlient_access_log" suffix=".txt"
+          prefix="access_log" suffix=".txt"
           pattern="%h %l %u %t &quot;%r&quot; %s %b"/>
         <Context path="" docBase="/usr/local/tomcat/webapps/ROOT" debug="0" reloadable="true">
           <Resource name="bean/CacheFactory" auth="Container"

@@ -50,7 +50,7 @@ class ClientConfiguration {
         this.redirect_uri = 'https://democlient.loginbuddy.net/spa.html';
         this.scope = 'openid email profile';
         this.responseType = 'code';
-        this.authserver = 'https://local.loginbuddy.net';
+        this.authserver = 'https://local.loginbuddy.net:8444';
         this.grant_type = 'authorization_code';
     }
 
