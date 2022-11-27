@@ -49,9 +49,22 @@ services:
       - "SSL_PORT=8444"
       - "SUPPORT_OIDCDR=true"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
+#      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
     entrypoint: /opt/docker/entrypoint.sh
 
   loginbuddy-oidcdr:
     image: saschazegerman/loginbuddy-oidcdr:latest
     container_name: loginbuddy-oidcdr
     restart: always
+
+#  hazelcast1:
+#    image: hazelcast/hazelcast
+#    restart: always
+#    environment:
+#      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast1:5701"
+#
+#  hazelcast2:
+#    image: hazelcast/hazelcast
+#    restart: always
+#    environment:
+#      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast2:5701"
