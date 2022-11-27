@@ -8,10 +8,6 @@
         "https://democlient.loginbuddy.net/callback",
         "https://democlient.loginbuddy.net/spa.html"
       ],
-      "providers": [
-        "server_loginbuddy",
-        "server_dynamic"
-      ],
       "accept_dynamic_provider": true,
       "on_behalf_of": [{"token_type":"id_token", "alg": "RS256"}],
       "client_name" : "Democlient",
@@ -25,10 +21,6 @@
       "client_type": "public",
       "client_uri": "https://democlient.loginbuddy.net",
       "redirect_uris": ["https://democlient.loginbuddy.net/callback"],
-      "providers": [
-        "server_loginbuddy",
-        "server_dynamic"
-      ],
       "accept_dynamic_provider": true,
       "signed_response_alg": "RS256"
     },
@@ -37,10 +29,6 @@
       "client_type": "public",
       "client_uri": "https://democlient.loginbuddy.net",
       "redirect_uris": ["https://democlient.loginbuddy.net/callback"],
-      "providers": [
-        "server_loginbuddy",
-        "server_dynamic"
-      ],
       "accept_dynamic_provider": true,
       "signed_response_alg": "ES256"
     }

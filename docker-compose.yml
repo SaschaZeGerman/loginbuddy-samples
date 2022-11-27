@@ -36,7 +36,6 @@ services:
     hostname: local.loginbuddy.net
     ports:
       - "8444:8444"
-      - "8000:8000"
     volumes:
       - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
       - ./docker-build/add-ons/loginbuddy/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
