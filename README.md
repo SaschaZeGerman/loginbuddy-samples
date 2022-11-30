@@ -22,12 +22,19 @@ To run and build the samples, these tools and technologies are needed:
   - for MacBooks this would be done at: `/etc/hosts`
   - for Windows this would be done at: `C:\Windows\System32\drivers\etc\hosts`
 
-Clone the project:
+Clone loginbuddy:
+
+- `git clone https://github.com/SaschaZeGerman/loginbuddy.git`  // this is needed due to dependencies that are not yet hosted on maven central
+  - `cd loginbuddy`
+  - `mvn --projects net.loginbuddy.common clean install`
+  - `cd ..`
+
+Clone this samples project:
 
 - `git clone https://github.com/SaschaZeGerman/loginbuddy-samples.git`
 - `cd ./loginbuddy-samples`
 
-Run these files to setup the dev environment and dev key pairs:
+Run these files to set up the dev environment and dev key pairs:
 
 - `sh initialize-dev-environment.sh`  // once
 - `sh initialize-dev-tls-keypair.sh`  // whenever you want to update the dev key pair
