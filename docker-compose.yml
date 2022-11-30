@@ -35,6 +35,7 @@ services:
     restart: always
     hostname: local.loginbuddy.net
     ports:
+      - "8000:8000"
       - "8444:8444"
     volumes:
       - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
@@ -43,14 +44,14 @@ services:
       - ./docker-build/add-ons/loginbuddy/server_loginbuddy.png:/usr/local/tomcat/webapps/ROOT/images/server_loginbuddy.png
       - ./docker-build/add-ons/loginbuddy/server_dynamic.png:/usr/local/tomcat/webapps/ROOT/images/server_dynamic.png
       - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
-      - ./docker-build/add-ons/loginbuddy/entrypoint.sh:/opt/docker/entrypoint.sh
     environment:
       - "SSL_PWD=${SSL_PWD}"
       - "SSL_PORT=8444"
       - "SUPPORT_OIDCDR=true"
+      - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
 #      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
-    entrypoint: /opt/docker/entrypoint.sh
+#    entrypoint: /opt/docker/entrypoint.sh
 
   loginbuddy-oidcdr:
     image: saschazegerman/loginbuddy-oidcdr:latest
