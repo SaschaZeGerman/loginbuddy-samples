@@ -51,7 +51,6 @@ services:
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
 #      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
-#    entrypoint: /opt/docker/entrypoint.sh
 
   loginbuddy-oidcdr:
     image: saschazegerman/loginbuddy-oidcdr:latest
