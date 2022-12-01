@@ -4,15 +4,17 @@
 // Take each domain of that document and add them to the list below (see example: connect to demoserver.loginbuddy.net)
 // This file will be attached to the default catalina.policy file
 //
-// [Loginbuddy_DEMOCLIENT]: adding permissions for loginbuddy-demoserver
+// [Loginbuddy_DEMOCLIENT]: adding permissions for loginbuddy-democlient
 grant codeBase "file:${catalina.home}/webapps/ROOT/-" {
     permission java.lang.RuntimePermission "getenv.DEMOCLIENT_LOCATION", "read";
     permission java.lang.RuntimePermission "getenv.DEMOCLIENT_LOCATION_LOGINBUDDY", "read";
     permission java.io.FilePermission "/usr/local/tomcat/ssl/loginbuddy.p12", "read";
     permission java.lang.RuntimePermission "getenv.HAZELCAST";
+    permission java.lang.RuntimePermission "getenv.LOGINBUDDY_SIDECAR_LOCATION";
 
     // required as of upgrade to tomcat with jdk11
     permission java.net.NetPermission "specifyStreamHandler";
 
     permission java.net.SocketPermission "local.loginbuddy.net", "connect,resolve";
+    permission java.net.SocketPermission "loginbuddy-sidecar", "connect,resolve";
 };

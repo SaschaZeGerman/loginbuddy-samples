@@ -77,8 +77,7 @@ public class Initialize extends LoginbuddyDemoclientCommon {
 
     LoginbuddyCache.CACHE.put(clientState, sessionValues);
 
-    // Create authorization URL
-
+    // Create authorization URL to send the user to Loginbuddy
     response.sendRedirect(String.format("%s/authorize?client_id=%s&response_type=%s&redirect_uri=%s&nonce=%s&state=%s&scope=%s&provider=%s&obfuscate_token=%b",
             location_loginbuddy,
         URLEncoder.encode(clientId, StandardCharsets.UTF_8),
