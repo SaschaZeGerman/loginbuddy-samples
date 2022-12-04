@@ -45,11 +45,6 @@
         <servlet-class>net.loginbuddy.democlient.Callback</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>ClientCallbackSidecar</servlet-name>
-        <servlet-class>net.loginbuddy.democlient.SideCar</servlet-class>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>ClientInitialize</servlet-name>
         <url-pattern>/initialize</url-pattern>
@@ -58,11 +53,6 @@
     <servlet-mapping>
         <servlet-name>ClientCallback</servlet-name>
         <url-pattern>/callback</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ClientCallbackSidecar</servlet-name>
-        <url-pattern>/sidecar</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

@@ -54,21 +54,6 @@ services:
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
 #      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
 
-  loginbuddy-sidecar:
-    image: saschazegerman/loginbuddy-sidecar:latest
-    container_name: loginbuddy-sidecar
-    hostname: loginbuddy-sidecar
-    restart: always
-    depends_on:
-      - loginbuddy-demoserver
-    environment:
-      - "SUPPORT_OIDCDR=true"
-      - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
-    volumes:
-      - ./docker-build/add-ons/loginbuddy-sidecar/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
-      - ./docker-build/add-ons/loginbuddy-sidecar/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
-      - ./docker-build/add-ons/loginbuddy-sidecar/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
-
   loginbuddy-oidcdr:
     image: saschazegerman/loginbuddy-oidcdr:latest
     container_name: loginbuddy-oidcdr

@@ -1,10 +1,10 @@
 # Loginbuddy - Samples
 
-This repository holds samples that use Loginbuddy. Once launched, users can open a browser and will find demo clients, a demo OpenID Connect (OIDC) server and Loginbuddy itself.
+This repository holds samples that use [Loginbuddy](https://github.com/SaschaZeGerman/loginbuddy). Once launched, users can open a browser and will find demo clients, a demo OpenID Connect (OIDC) server and Loginbuddy itself.
 
 Loginbuddy is located in between clients and OIDC providers. Loginbuddy handles all *complicated* parts of OAuth and OIDC flows and follows best practices.
 
-These samples are also usable to connect to new providers, test connections, view responses of those providers, and integrate them into a client.
+These samples are also usable to connect to new providers, test connections, view responses of those providers, before integrate them into a client.
 
 ## Run the samples
 
