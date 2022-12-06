@@ -14,7 +14,10 @@ services:
       - "443:443"
     environment:
       - "SSL_PWD=${SSL_PWD}"
-      - "LOGINBUDDY_SIDECAR_LOCATION=http://loginbuddy-sidecar:8044"
+      - "DEMOCLIENT_SSL_PORT=443"
+      - "DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net"
+      - "DEMOCLIENT_LOCATION=https://democlient.loginbuddy.net"
+      - "DEMOCLIENT_LOCATION_LOGINBUDDY=https://local.loginbuddy.net:8444"
     volumes:
       - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
 
@@ -27,6 +30,9 @@ services:
       - "8443:8443"
     environment:
       - "SSL_PWD=${SSL_PWD}"
+      - "DEMOSERVER_SSL_PORT=8443"
+      - "DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net"
+      - "DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443"
     volumes:
       - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
 

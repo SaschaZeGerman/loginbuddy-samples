@@ -26,7 +26,7 @@ Clone loginbuddy:
 
 - `git clone https://github.com/SaschaZeGerman/loginbuddy.git`  // this is needed due to dependencies that are not yet hosted on maven central
   - `cd loginbuddy`
-  - `mvn --projects net.loginbuddy.common clean install`
+  - `mvn clean install`
   - `cd ..`
 
 Clone this samples project:
@@ -51,8 +51,6 @@ Loginbuddy is completely docker based:
 
 - `docker-compose up -d`  // to view the logging output, run it without the switch -d)
 - `docker-compose down` // once you want to stop the setup
-
-**Tip**: the samples will pull Loginbuddy (loginbuddy, loginbuddy-oidcdr) from Dockerhub. However, depending on your machine (MacBook Intel/ Apple silicone/ Windows) you may run into problems and have to build Loginbuddy yourself. For that, please follow the instructions at [Loginbuddy on GitHub](https://github.com/SaschaZeGerman/loginbuddy/wiki/Development). It mainly requires `make build_all`, that's it.
 
 After launching the setup, you should find these images (docker ps -aq)
 
