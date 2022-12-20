@@ -23,6 +23,11 @@
             <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.loginbuddy</groupId>
+            <artifactId>client-sdk</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

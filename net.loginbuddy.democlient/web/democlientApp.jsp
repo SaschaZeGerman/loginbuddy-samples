@@ -76,6 +76,12 @@
         <input class="form-check-input" type="checkbox" value="" id="idObfuscateToken" onclick="return obfuscateProviderToken();">
         <label class="form-check-label" for="idObfuscateToken"> obfuscate identity providers access_token and refresh_token</label>
     </form>
+    <hr/>
+    <p>Providers below are supported via <strong>loginbuddy-sidecar</strong>.</p>
+    <form action="sidecar" method="post" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" id="provider_sidecar" name="provider_sidecar" value="server_loginbuddy" class="form-control" size="80">
+        <button type="submit" class="btn btn-primary">server_loginbuddy</button>
+    </form>
 </div>
 </body>
 </html>

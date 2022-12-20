@@ -12,12 +12,14 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8009:8009"
     environment:
       - "SSL_PWD=${SSL_PWD}"
       - "DEMOCLIENT_SSL_PORT=443"
       - "DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net"
       - "DEMOCLIENT_LOCATION=https://democlient.loginbuddy.net"
       - "DEMOCLIENT_LOCATION_LOGINBUDDY=https://local.loginbuddy.net:8444"
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=*:8009,suspend=n,server=y"
     volumes:
       - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
 
@@ -59,6 +61,21 @@ services:
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
 #      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
+
+  loginbuddy-sidecar:
+    image: saschazegerman/loginbuddy-sidecar:latest
+    container_name: loginbuddy-sidecar
+    hostname: loginbuddy-sidecar
+    restart: always
+    depends_on:
+      - loginbuddy-demoserver
+    environment:
+      - "SUPPORT_OIDCDR=true"
+      - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
+    volumes:
+      - ./docker-build/add-ons/loginbuddy-sidecar/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
+      - ./docker-build/add-ons/loginbuddy-sidecar/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
+      - ./docker-build/add-ons/loginbuddy-sidecar/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
 
   loginbuddy-oidcdr:
     image: saschazegerman/loginbuddy-oidcdr:latest
