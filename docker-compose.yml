@@ -7,27 +7,25 @@ services:
   loginbuddy-democlient:
     image: saschazegerman/loginbuddy-democlient:latest
     container_name: democlient
-    restart: always
     hostname: democlient.loginbuddy.net
+    restart: always
     ports:
       - "80:80"
       - "443:443"
-      - "8009:8009"
     environment:
       - "SSL_PWD=${SSL_PWD}"
       - "DEMOCLIENT_SSL_PORT=443"
       - "DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net"
       - "DEMOCLIENT_LOCATION=https://democlient.loginbuddy.net"
       - "DEMOCLIENT_LOCATION_LOGINBUDDY=https://local.loginbuddy.net:8444"
-      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=*:8009,suspend=n,server=y"
     volumes:
       - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
 
   loginbuddy-demoserver:
     image: saschazegerman/loginbuddy-demoserver:latest
     container_name: demoserver
-    restart: always
     hostname: demoserver.loginbuddy.net
+    restart: always
     ports:
       - "8443:8443"
     environment:
@@ -41,8 +39,8 @@ services:
   loginbuddy:
     image: saschazegerman/loginbuddy:latest
     container_name: loginbuddy
-    restart: always
     hostname: local.loginbuddy.net
+    restart: always
     depends_on:
       - loginbuddy-demoserver
     ports:
@@ -80,6 +78,7 @@ services:
   loginbuddy-oidcdr:
     image: saschazegerman/loginbuddy-oidcdr:latest
     container_name: loginbuddy-oidcdr
+    hostname: loginbuddy-oidcdr
     restart: always
 
 #  hazelcast1:

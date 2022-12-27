@@ -24,3 +24,5 @@ target/
 ## files for local development
 dev/
 .env*
+
+hsperfdata_root

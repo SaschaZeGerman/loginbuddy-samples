@@ -4,7 +4,7 @@ This repository holds samples that use [Loginbuddy](https://github.com/SaschaZeG
 
 Loginbuddy is located in between clients and OIDC providers. Loginbuddy handles all *complicated* parts of OAuth and OIDC flows and follows best practices.
 
-These samples are also usable to connect to new providers, test connections, view responses of those providers, before integrate them into a client.
+These samples are also usable to connect to new providers, test connections, view responses of those providers, before integrating them into a client.
 
 ## Run the samples
 
@@ -25,7 +25,11 @@ To run and build the samples, these tools and technologies are needed:
 Clone loginbuddy:
 
 - `git clone https://github.com/SaschaZeGerman/loginbuddy.git`  // this is needed due to dependencies that are not yet hosted on maven central
-  - `cd loginbuddy`
+  - `cd ./loginbuddy`
+  - `make build_all`
+  - `cd ..`
+- `git clone https://github.com/SaschaZeGerman/loginbuddy-tools.git`  // this is needed due to dependencies that are not yet hosted on maven central
+  - `cd ./loginbuddy-tools`
   - `mvn clean install`
   - `cd ..`
 
@@ -52,25 +56,30 @@ Loginbuddy is completely docker based:
 - `docker-compose up -d`  // to view the logging output, run it without the switch -d)
 - `docker-compose down` // once you want to stop the setup
 
-After launching the setup, you should find these images (docker ps -aq)
+After launching the setup, you should find these running containers (`docker ps`)
 
 - **saschazegerman/loginbuddy-democlient:latest** (part of this project)
   - simple applications, a Java based web application and a JavaScript based Single Page App (SPA)
 - **saschazegerman/loginbuddy-demoserver:latest** (part of this project)
   - a simple OpenID Connect server to simulate a real IDP
   - this server does some request validations, but it does not verify passwords or usernames (... for demo only)
-- **saschazegerman/loginbuddy:latest** (pulled from Dockerhub)
+- **saschazegerman/loginbuddy:latest** (build via the project *loginbuddy*)
   - this is Loginbuddy itself, deployed as standalone service in front of an IDP
-  - this is the container an application developers would use to support OIDC flows in his application
-- **saschazegerman/loginbuddy-oidcdr:latest** (pulled from Dockerhub)
+  - this is the container an application developer would use to support OIDC flows in his application
+- **saschazegerman/loginbuddy-sidecar:latest** (build via the project *loginbuddy*)
+  - this is the Loginbuddy sidecar container
+  - applications connect to this container directly, the sidecar is not exposed to public clients, has no exposed ports
+  - in this scenario, *loginbuddy* is practically part of the application that is using it (i.e.: democlient.loginbuddy.net)
+- **saschazegerman/loginbuddy-oidcdr:latest** (build via the project *loginbuddy*)
   - this is Loginbuddys container that handles dynamic registrations
-  - it works in conjunction with Loginbuddy standalone and sidecar images
+  - it works in conjunction with Loginbuddy standalone and sidecar containers
 
 The containers occupy these ports:
 
 - democlient: 80, 443
 - demoserver: 8443
-- Loginbuddy: 8444
+- loginbuddy: 8444
+- loginbuddy-sidecar, loginbuddy-oidcdr: no public ports
 
 These ports are needed to simulate the three party setup on a single machine.
 
@@ -110,7 +119,7 @@ To add another button to the selection of providers, only a few steps are needed
 2. Configure Loginbuddy to include that provider when displaying the list of supported providers
 3. Add an image for the button into Loginbuddy
 
-### Configure your OpenID Provider
+### Visit your OpenID Provider
 
 - Create a developer account at your target OpenID Provider (try Google for a start)
 - Register an OAuth application using these details:
@@ -120,20 +129,26 @@ To add another button to the selection of providers, only a few steps are needed
   - **client_id**
   - **client_secret**
 
-### Within this sample project
+### Update this sample project
 
 You need to update a few files:
 
 - **./docker-build/add-ons/loginbuddy/config.json**
   - add a provider configuration for Google
-  - copy the example from *./docker-build/add-ons/templates/config_common_providers.json* and fill in *client_id/ client_secret* 
+  - copy the example from *./docker-build/add-ons/templates/config_common_providers.json* into the provider section of *config.json* and fill in *client_id, client_secret* 
 - **./docker-build/add-ons/loginbuddy/permissions.policy**
   - Uncomment these lines:
     -     permission java.net.SocketPermission "accounts.google.com", "connect,resolve";
           permission java.net.SocketPermission "oauth2.googleapis.com", "connect,resolve";
           permission java.net.SocketPermission "openidconnect.googleapis.com", "connect,resolve";
           permission java.net.SocketPermission "www.googleapis.com", "connect,resolve";
-- launch the setup as before
+- **custom image**
+  - if you want to use a custom image for the provider selection button do this:
+    - create a png image and name it *google* (google.png). Generally, the image name (provider-name) has to match the value you chose for *{..."provider": "provider-name"...}* in *config.json*
+    - in *docker-compose.yml* add an entry to the volumes for *loginbuddy*. Point and map it to your image (follow the example of *server_dynamic.png*)
+    - by default, Loginbuddy has built in images for amazon, apple, github, google, linkedin, loginid, pingone, self-issued
+
+Launch the setup as before
 - Open a browser at **https://democlient.loginbuddy.net** and select the image of *Sign in with Google*
 - follow the prompts
 

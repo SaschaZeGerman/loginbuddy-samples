@@ -24,10 +24,11 @@ public class SideCar extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        ParameterValidatorResult clientProviderResult = ParameterValidator
-                .getSingleValue(request.getParameterValues("provider_sidecar"));
+        // Find incoming parameters. In this case the selected provider
+        ParameterValidatorResult clientProviderResult = ParameterValidator.getSingleValue(request.getParameterValues("provider_sidecar"));
         String provider = Sanetizer.sanetize(clientProviderResult.getValue(), 64);
 
+        // Create a map as session object and associate it with the state
         Map<String, Object> sessionValues = new HashMap<>();
         sessionValues.put(Constants.CLIENT_PROVIDER.getKey(), provider);
 
@@ -37,56 +38,64 @@ public class SideCar extends HttpServlet {
         String clientState = UUID.randomUUID().toString();
         sessionValues.put(Constants.CLIENT_STATE.getKey(), clientState);
 
+        // Use Loginbuddys Cache
         LoginbuddyCache.CACHE.put(clientState, sessionValues);
 
+        // Use the SDK to request the authorizationUrl for the given provider.
+        // - nonce and state are optional (state is recommended). Both are for the client only, Loginbuddy manages its own values
+        // - more values can be set before calling 'build()'
         SidecarClient authRequest = SidecarClient.createAuthRequest(provider)
                 .setNonce(clientNonce)
                 .setState(clientState)
                 .build();
 
         try {
+            // redirect the user to the selected provider
             response.sendRedirect(authRequest.getAuthorizationUrl());
         } catch (LoginbuddyToolsException e) {
-            throw new RuntimeException(e);
+            response.sendError(e.getHttpStatus(), e.getErrorDescription());
         }
 
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /*
-            As for POST, first validation should be implemented here too.
-            The url query component will either contain 'code' and 'state' or 'error' and 'error_description'.
-            Our code does not need to worry about that, Loginbuddy will handle both cases.
-         */
+
+        // The provider redirects back and includes 'code' and 'state' or an error
+        // In either case, the query component can be passed to Loginbuddy as is
         String query = request.getQueryString();
         try {
-            LoginbuddyResponse loginbuddyResponse = SidecarClient.createAuthResponse(query).build().getAuthResponse();
-            Map<String, Object> sessionValues = (Map)LoginbuddyCache.CACHE.get(loginbuddyResponse.getState());
 
-            // Let's do some checks (not nice, just to give the idea):
+            // Loginbuddy exchanges the code for an access_token, validates the response and returns it here.
+            LoginbuddyResponse loginbuddyResponse = SidecarClient.createAuthResponse(query).build().getAuthResponse();
+
+            // Find our previously session object and do some simple validations
+            Map<String, Object> sessionValues = (Map) LoginbuddyCache.CACHE.get(loginbuddyResponse.getState());
+
             // expected state?
-            if(sessionValues.get(Constants.CLIENT_STATE.getKey()).equals(loginbuddyResponse.getState())) {
-                // expected nonce?
-                if(sessionValues.get(Constants.CLIENT_NONCE.getKey()).equals(loginbuddyResponse.getLoginbuddyDetails().getNonce())) {
-                    // expected provider?
-                    if(sessionValues.get(Constants.CLIENT_PROVIDER.getKey()).equals(loginbuddyResponse.getProviderDetails().getProvider())) {
-                        MsgResponse msgResp = new MsgResponse("application/json", loginbuddyResponse.toString(), loginbuddyResponse.getStatus());
-                        sessionValues.put("msgResponse", msgResp);
-                        LoginbuddyCache.CACHE.put(loginbuddyResponse.getState(), sessionValues);
-                        response.sendRedirect(String.format("democlientCallback.jsp?state=%s", loginbuddyResponse.getState()));
-                    } else {
-                        throw new RuntimeException("Unexpected provider");
-                    }
-                } else {
-                    throw new RuntimeException("Unexpected nonce");
-                }
-            } else {
+            if (!sessionValues.get(Constants.CLIENT_STATE.getKey()).equals(loginbuddyResponse.getState())) {
                 throw new RuntimeException("Unexpected state");
             }
+            // expected nonce?
+            if (!sessionValues.get(Constants.CLIENT_NONCE.getKey()).equals(loginbuddyResponse.getLoginbuddyDetails().getNonce())) {
+                throw new RuntimeException("Unexpected nonce");
+            }
+            // expected provider?
+            if (!sessionValues.get(Constants.CLIENT_PROVIDER.getKey()).equals(loginbuddyResponse.getProviderDetails().getProvider())) {
+                throw new RuntimeException("Unexpected provider");
+            }
+
+            // Handle the response so that this client can display it to the user
+            MsgResponse msgResp = new MsgResponse("application/json", loginbuddyResponse.toString(), loginbuddyResponse.getStatus());
+            sessionValues.put("msgResponse", msgResp);
+            LoginbuddyCache.CACHE.put(loginbuddyResponse.getState(), sessionValues);
+            response.sendRedirect(String.format("democlientCallback.jsp?state=%s", loginbuddyResponse.getState()));
+
+        } catch (LoginbuddyToolsException e) {
+            response.sendError(e.getHttpStatus(), e.getErrorDescription());
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(400, String.format("Something went wrong: %s", e.getMessage()));
+            response.sendError(400, e.getMessage());
         }
     }
 }
