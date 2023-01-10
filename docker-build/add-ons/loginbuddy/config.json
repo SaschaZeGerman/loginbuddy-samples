@@ -31,6 +31,14 @@
       "redirect_uris": ["https://democlient.loginbuddy.net/callback"],
       "accept_dynamic_provider": true,
       "signed_response_alg": "ES256"
+    },
+    {
+      "client_id": "configure-me",
+      "client_secret": "configure-me",
+      "client_type": "confidential",
+      "client_uri": "https://local.loginbuddy.net",
+      "redirect_uris": ["https://local.loginbuddy.net:8443/management/callback"],
+      "providers": ["loginbuddy"]
     }
   ],
   "providers": [
