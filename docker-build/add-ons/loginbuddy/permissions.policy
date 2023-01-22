@@ -18,6 +18,7 @@ grant codeBase "file:${catalina.home}/webapps/ROOT/-" {
     // permission java.net.SocketPermission "api.linkedin.com", "connect,resolve";
     // permission java.net.SocketPermission "appleid.apple.com", "connect,resolve";
     // permission java.net.SocketPermission "auth.pingone.com", "connect,resolve";
-    // permission java.net.SocketPermission "hazelcast1", "connect,resolve";
-    // permission java.net.SocketPermission "hazelcast2", "connect,resolve";
+    permission java.net.SocketPermission "hazelcast1", "connect,resolve";
+    permission java.net.SocketPermission "hazelcast2", "connect,resolve";
+
 };

@@ -1,0 +1,5 @@
+FROM saschazegerman/loginbuddy:latest
+
+COPY loginbuddy/conf/server.xml /usr/local/tomcat/conf/server.xml
+COPY loginbuddy/conf/logging.properties /usr/local/tomcat/conf/logging.properties
+COPY loginbuddy/webapps/WEB-INF/web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/web.xml

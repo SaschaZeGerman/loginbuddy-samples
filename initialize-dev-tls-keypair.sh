@@ -13,8 +13,10 @@ export $(cat .env | grep SSL_PWD)
 # Remove an existing keypair,  a new one will be created
 #
 rm -f dev/loginbuddy.p12
+rm -f dev/loginbuddy_client.p12
+rm -f dev/loginbuddy_server.p12
 
-# Create private key
+# Create private key for LOGINBUDDY
 #
 keytool -genkey \
   -alias loginbuddy \
@@ -25,7 +27,33 @@ keytool -genkey \
   -validity 365 \
   -keysize 2048 \
   -dname "CN=${HOSTNAME_LOGINBUDDY}" \
-  -ext san=dns:${HOSTNAME_LOGINBUDDY},dns:${DEMOSERVER_HOSTNAME},dns:${DEMOCLIENT_HOSTNAME},dns:localhost
+  -ext san=dns:${HOSTNAME_LOGINBUDDY},dns:localhost
+
+# Create private key for DEMOCLIENT
+#
+keytool -genkey \
+  -alias loginbuddy \
+  -keystore dev/loginbuddy_client.p12 \
+  -storetype PKCS12 \
+  -keyalg RSA -storepass ${SSL_PWD} \
+  -keypass ${SSL_PWD} \
+  -validity 365 \
+  -keysize 2048 \
+  -dname "CN=${DEMOCLIENT_HOSTNAME}" \
+  -ext san=dns:${DEMOCLIENT_HOSTNAME},dns:localhost
+
+# Create private key for DEMOSERVER
+#
+keytool -genkey \
+  -alias loginbuddy \
+  -keystore dev/loginbuddy_server.p12 \
+  -storetype PKCS12 \
+  -keyalg RSA -storepass ${SSL_PWD} \
+  -keypass ${SSL_PWD} \
+  -validity 365 \
+  -keysize 2048 \
+  -dname "CN=${DEMOSERVER_HOSTNAME}" \
+  -ext san=dns:${DEMOSERVER_HOSTNAME},dns:localhost
 
 # Remove all variables
 #

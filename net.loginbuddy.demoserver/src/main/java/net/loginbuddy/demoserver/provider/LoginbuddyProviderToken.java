@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 public class LoginbuddyProviderToken extends LoginbuddyProviderCommon {
 
-    private static final Logger LOGGER = Logger.getLogger(String.valueOf(LoginbuddyProviderToken.class));
+    private static final Logger LOGGER = Logger.getLogger(LoginbuddyProviderToken.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -109,7 +109,7 @@ public class LoginbuddyProviderToken extends LoginbuddyProviderCommon {
         // Create values for the token response
         String access_token = "FAKE_".concat(UUID.randomUUID().toString());
         String refresh_token = "FAKE_".concat(UUID.randomUUID().toString());
-        String id_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJoZWxsbyI6ImxvZ2luYnVkZHkifQ.z9r5WoqNycrF7YLOZTZpMarwUeTopU1UZzRAU7beFTc"; // completely fake
+        String id_token = null;
         try {
             id_token = Jwt.DEFAULT.createSignedJwtRs256(location_demoserver,
                     sessionContext.getString("client_id"),

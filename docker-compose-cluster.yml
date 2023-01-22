@@ -1,0 +1,132 @@
+#
+# This docker-compose file is usable for demo purposes:
+#
+version: '3.4'
+services:
+
+  loginbuddy-democlient:
+    image: saschazegerman/loginbuddy-democlient:latest
+    container_name: democlient
+    hostname: democlient.loginbuddy.net
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "DEMOCLIENT_SSL_PORT=443"
+      - "DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net"
+      - "DEMOCLIENT_LOCATION=https://democlient.loginbuddy.net"
+      - "DEMOCLIENT_LOCATION_LOGINBUDDY=https://local.loginbuddy.net:8444"
+      - "SSL_TRUSTED_SERVER=local.loginbuddy.net:8444"
+    volumes:
+      - ./dev/loginbuddy_client.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+
+  loginbuddy-demoserver:
+    image: saschazegerman/loginbuddy-demoserver:latest
+    container_name: demoserver
+    hostname: demoserver.loginbuddy.net
+    restart: always
+    ports:
+      - "8443:8443"
+    environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "DEMOSERVER_SSL_PORT=8443"
+      - "DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net"
+      - "DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443"
+    volumes:
+      - ./dev/loginbuddy_server.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+
+  loginbuddy1:
+    image: local/loginbuddy-cluster:latest
+    container_name: loginbuddy1
+    hostname: loginbuddy1
+    restart: always
+    depends_on:
+      - loginbuddy-demoserver
+    volumes:
+      - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
+      - ./docker-build/add-ons/loginbuddy/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
+      - ./docker-build/add-ons/loginbuddy/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
+      - ./docker-build/add-ons/loginbuddy/server_loginbuddy.png:/usr/local/tomcat/webapps/ROOT/images/server_loginbuddy.png
+      - ./docker-build/add-ons/loginbuddy/server_dynamic.png:/usr/local/tomcat/webapps/ROOT/images/server_dynamic.png
+      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+    environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "SSL_PORT=8444"
+      - "SUPPORT_OIDCDR=true"
+      - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
+      - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
+      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
+      - "STORAGE=HAZELCAST[hazelcast1:5701,hazelcast2:5701]"
+
+  loginbuddy2:
+    image: local/loginbuddy-cluster:latest
+    container_name: loginbuddy2
+    hostname: loginbuddy2
+    restart: always
+    depends_on:
+      - loginbuddy-demoserver
+    volumes:
+      - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
+      - ./docker-build/add-ons/loginbuddy/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
+      - ./docker-build/add-ons/loginbuddy/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
+      - ./docker-build/add-ons/loginbuddy/server_loginbuddy.png:/usr/local/tomcat/webapps/ROOT/images/server_loginbuddy.png
+      - ./docker-build/add-ons/loginbuddy/server_dynamic.png:/usr/local/tomcat/webapps/ROOT/images/server_dynamic.png
+      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+    environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "SSL_PORT=8444"
+      - "SUPPORT_OIDCDR=true"
+      - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
+      - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
+      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
+      - "STORAGE=HAZELCAST[hazelcast1:5701,hazelcast2:5701]"
+
+  loginbuddy:
+    image: local/loadbalancer:latest
+    container_name: loginbuddy
+    hostname: local.loginbuddy.net
+    restart: always
+    depends_on:
+      - loginbuddy1
+      - loginbuddy2
+    ports:
+      - "8444:8444"
+
+  loginbuddy-sidecar:
+    image: saschazegerman/loginbuddy-sidecar:latest
+    container_name: loginbuddy-sidecar
+    hostname: loginbuddy-sidecar
+    restart: always
+    depends_on:
+      - loginbuddy-demoserver
+    environment:
+      - "SUPPORT_OIDCDR=true"
+      - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
+    volumes:
+      - ./docker-build/add-ons/loginbuddy-sidecar/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
+      - ./docker-build/add-ons/loginbuddy-sidecar/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
+      - ./docker-build/add-ons/loginbuddy-sidecar/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
+
+  loginbuddy-oidcdr:
+    image: saschazegerman/loginbuddy-oidcdr:latest
+    container_name: loginbuddy-oidcdr
+    hostname: loginbuddy-oidcdr
+    restart: always
+
+  hazelcast1:
+    image: hazelcast/hazelcast:5.2.0
+    container_name: hazelcast1
+    hostname: hazelcast1
+    restart: always
+    environment:
+      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast1:5701"
+
+  hazelcast2:
+    image: hazelcast/hazelcast:5.2.0
+    container_name: hazelcast2
+    hostname: hazelcast2
+    restart: always
+    environment:
+      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast2:5701"

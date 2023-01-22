@@ -40,12 +40,12 @@ fi
 #
 # Export the public certificates
 #
-keytool -export -alias loginbuddy -file /usr/local/tomcat/ssl/demosetup.crt -keystore /usr/local/tomcat/ssl/loginbuddy.p12 -storepass ${UUID}
+#keytool -export -alias loginbuddy -file /usr/local/tomcat/ssl/demosetup.crt -keystore /usr/local/tomcat/ssl/loginbuddy.p12 -storepass ${UUID}
 
 # Import the certs as trusted certificates
 #
-printf "importing demosetup.crt as trusted cert\n"
-keytool -importcert -alias loginbuddy -file /usr/local/tomcat/ssl/demosetup.crt -storepass changeit -keystore $JAVA_HOME/lib/security/cacerts -trustcacerts -noprompt
+#printf "importing demosetup.crt as trusted cert\n"
+#keytool -importcert -alias loginbuddy -file /usr/local/tomcat/ssl/demosetup.crt -storepass changeit -keystore $JAVA_HOME/lib/security/cacerts -trustcacerts -noprompt
 
 # Find the policy file that contains socket permissions and add them to the default catalina.policy file
 # default is located here: /usr/local/tomcat/conf/catalina.policy
