@@ -154,4 +154,13 @@ Launch the setup as before
 
 For more info, look into the [Configuration](Configuration) document.
 
+## CLuster demo
+
+Please follow the cluster build and usage instructions at: **./docker-build/add-ons/cluster/README.md**.
+
+In order to try out the cluster:
+
+- `docker-compose -f docker-compose-cluster.yml up`
+  - this will include a loadbalancer, two loginbuddy, two hazelcast, one loginbuddy-sidecar, one loginbuddy-oidcdr, one democlient, one demoserver
+
 If you are not sure what Loginbuddy can do for you, please refer to **Deployment**, **Development** and **Configuration** in this WIKI.
