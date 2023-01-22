@@ -1,3 +1,5 @@
+# Loginbuddy with clustr specific configurations
+#
 FROM saschazegerman/loginbuddy:latest
 
 COPY loginbuddy/conf/server.xml /usr/local/tomcat/conf/server.xml

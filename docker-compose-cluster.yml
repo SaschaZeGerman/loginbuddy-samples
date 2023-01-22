@@ -4,46 +4,44 @@
 version: '3.4'
 services:
 
-  loginbuddy-democlient:
-    image: saschazegerman/loginbuddy-democlient:latest
-    container_name: democlient
-    hostname: democlient.loginbuddy.net
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - "SSL_PWD=${SSL_PWD}"
-      - "DEMOCLIENT_SSL_PORT=443"
-      - "DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net"
-      - "DEMOCLIENT_LOCATION=https://democlient.loginbuddy.net"
-      - "DEMOCLIENT_LOCATION_LOGINBUDDY=https://local.loginbuddy.net:8444"
-      - "SSL_TRUSTED_SERVER=local.loginbuddy.net:8444"
-    volumes:
-      - ./dev/loginbuddy_client.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+# This docker compose file demonstrates how to set up a Loginbuddy cluster using hazelcast and nginx.
+# Find the README at ./docker-build/add-ons/cluster
 
-  loginbuddy-demoserver:
-    image: saschazegerman/loginbuddy-demoserver:latest
-    container_name: demoserver
-    hostname: demoserver.loginbuddy.net
+# Cluster nodes:
+# - hazelcast1, hazelcast2 (represents shared storage for sessions, caching, jwk)
+# - loginbuddy1, loginbuddy2 (the processing nodes)
+# - loginbuddy (which is the loadbalancer but maintains the 'cluster_hostname' that external systems connect to
+
+  hazelcast1:
+    image: hazelcast/hazelcast:5.2.0
+    container_name: hazelcast1
+    hostname: hazelcast1
     restart: always
-    ports:
-      - "8443:8443"
     environment:
-      - "SSL_PWD=${SSL_PWD}"
-      - "DEMOSERVER_SSL_PORT=8443"
-      - "DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net"
-      - "DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443"
-    volumes:
-      - ./dev/loginbuddy_server.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast1:5701"
+
+  hazelcast2:
+    image: hazelcast/hazelcast:5.2.0
+    container_name: hazelcast2
+    hostname: hazelcast2
+    restart: always
+    environment:
+      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast2:5701"
 
   loginbuddy1:
     image: local/loginbuddy-cluster:latest
     container_name: loginbuddy1
     hostname: loginbuddy1
     restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-kf", "http://loginbuddy1:8080/status/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
     depends_on:
       - loginbuddy-demoserver
+      - hazelcast1
+      - hazelcast2
     volumes:
       - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
       - ./docker-build/add-ons/loginbuddy/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
@@ -65,8 +63,15 @@ services:
     container_name: loginbuddy2
     hostname: loginbuddy2
     restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-kf", "http://loginbuddy2:8080/status/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
     depends_on:
       - loginbuddy-demoserver
+      - hazelcast1
+      - hazelcast2
     volumes:
       - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
       - ./docker-build/add-ons/loginbuddy/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
@@ -89,10 +94,15 @@ services:
     hostname: local.loginbuddy.net
     restart: always
     depends_on:
-      - loginbuddy1
-      - loginbuddy2
+      loginbuddy1:
+        condition: "service_healthy"
+      loginbuddy2:
+        condition: "service_healthy"
     ports:
       - "8444:8444"
+
+# These two loginbuddy containers are not part of the cluster in this setup
+#
 
   loginbuddy-sidecar:
     image: saschazegerman/loginbuddy-sidecar:latest
@@ -115,18 +125,38 @@ services:
     hostname: loginbuddy-oidcdr
     restart: always
 
-  hazelcast1:
-    image: hazelcast/hazelcast:5.2.0
-    container_name: hazelcast1
-    hostname: hazelcast1
-    restart: always
-    environment:
-      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast1:5701"
+# Demo OpenID Connect server and client
+#
 
-  hazelcast2:
-    image: hazelcast/hazelcast:5.2.0
-    container_name: hazelcast2
-    hostname: hazelcast2
+  loginbuddy-demoserver:
+    image: saschazegerman/loginbuddy-demoserver:latest
+    container_name: demoserver
+    hostname: demoserver.loginbuddy.net
     restart: always
+    ports:
+      - "8443:8443"
     environment:
-      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast2:5701"
+      - "SSL_PWD=${SSL_PWD}"
+      - "DEMOSERVER_SSL_PORT=8443"
+      - "DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net"
+      - "DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443"
+    volumes:
+      - ./dev/loginbuddy_server.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+
+  loginbuddy-democlient:
+    image: saschazegerman/loginbuddy-democlient:latest
+    container_name: democlient
+    hostname: democlient.loginbuddy.net
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "DEMOCLIENT_SSL_PORT=443"
+      - "DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net"
+      - "DEMOCLIENT_LOCATION=https://democlient.loginbuddy.net"
+      - "DEMOCLIENT_LOCATION_LOGINBUDDY=https://local.loginbuddy.net:8444"
+      - "SSL_TRUSTED_SERVER=local.loginbuddy.net:8444"
+    volumes:
+      - ./dev/loginbuddy_client.p12:/usr/local/tomcat/ssl/loginbuddy.p12

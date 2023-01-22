@@ -1,3 +1,5 @@
+# Loadbalancer
+#
 FROM nginx:latest
 
 COPY nginx_ssl.conf /etc/nginx/nginx.conf
