@@ -1,6 +1,6 @@
 # Using nginx as loadbalancer to front two Loginbuddy instances
 
-**NOTE**: Before you continue here, make sure to follow the setup instructions in *README.md* in the samples root directory!
+**NOTE**: Before you continue here, make sure to follow the setup instructions in *README* in the samples root directory!
 
 Nginx may be used as a load balancer in front of two or more Loginbuddy instances. This demo includes two possible configurations:
 

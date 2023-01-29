@@ -153,7 +153,7 @@ Build and launch the setup as before:
 - Open a browser at **https://democlient.loginbuddy.net** and select the image of *Sign in with Google*
 - follow the prompts
 
-For more info, look into the [Configuration](Configuration) document.
+For more info, look into the [Configuration](https://github.com/SaschaZeGerman/loginbuddy/wiki/Configuration) document of Loginbuddy.
 
 ## Cluster demo
 
