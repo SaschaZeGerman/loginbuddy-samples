@@ -39,7 +39,6 @@ services:
       timeout: 15s
       retries: 5
     depends_on:
-      - loginbuddy-demoserver
       - hazelcast1
       - hazelcast2
     volumes:
@@ -66,7 +65,6 @@ services:
       timeout: 15s
       retries: 5
     depends_on:
-      - loginbuddy-demoserver
       - hazelcast1
       - hazelcast2
     volumes:
@@ -95,7 +93,7 @@ services:
     ports:
       - "8444:8444"
 
-# These two loginbuddy containers are not part of the cluster in this setup
+# These two Loginbuddy containers are not part of the cluster in this setup
 #
 
   loginbuddy-sidecar:

@@ -22,7 +22,7 @@ To run and build the samples, these tools and technologies are needed:
   - for MacBooks this would be done at: `/etc/hosts`
   - for Windows this would be done at: `C:\Windows\System32\drivers\etc\hosts`
 
-Clone loginbuddy:
+Clone Loginbuddy:
 
 - `git clone https://github.com/SaschaZeGerman/loginbuddy.git`  // this is needed due to dependencies that are not yet hosted on maven central
   - `cd ./loginbuddy`
@@ -41,7 +41,7 @@ Clone this samples project:
 Run these files to set up the dev environment and dev key pairs:
 
 - `sh initialize-dev-environment.sh`  // once
-- `sh initialize-dev-tls-keypair.sh`  // whenever you want to update the dev key pair
+- `sh initialize-dev-tls-keypair.sh`  // whenever you want to update the development key pair
 
 ### Build the samples
 
@@ -74,7 +74,7 @@ After launching the setup, you should find these running containers (`docker ps`
   - this is Loginbuddys container that handles dynamic registrations
   - it works in conjunction with Loginbuddy standalone and sidecar containers
 
-The containers occupy these ports:
+The containers listen these ports:
 
 - democlient: 80, 443
 - demoserver: 8443
@@ -91,7 +91,7 @@ Now that your setup is up and running, open a browser:
 
 ``` 
 You have to confirm SSL/TLS certificate warnings due to self-signed certificates. Because the setup uses different hostnames, you have to confirm multiple times.
-Confirming these warnings is only required once since the setup is reusing the generated dev key pair with each launch.
+Confirming these warnings is only required once since the setup is reusing the generated development key pair with each launch.
 ```
 
 Out of the box there are two clients available. A web application and a SPA, both demo slightly different features.
@@ -135,7 +135,7 @@ You need to update a few files:
 
 - **./docker-build/add-ons/loginbuddy/config.json**
   - add a provider configuration for Google
-  - copy the example from *./docker-build/add-ons/templates/config_common_providers.json* into the provider section of *config.json* and fill in *client_id, client_secret* 
+  - copy the example **provider: google** from *./docker-build/add-ons/templates/config_common_providers.json* into the provider section of *config.json* and fill in *client_id, client_secret* 
 - **./docker-build/add-ons/loginbuddy/permissions.policy**
   - Uncomment these lines:
     -     permission java.net.SocketPermission "accounts.google.com", "connect,resolve";
@@ -143,24 +143,29 @@ You need to update a few files:
           permission java.net.SocketPermission "openidconnect.googleapis.com", "connect,resolve";
           permission java.net.SocketPermission "www.googleapis.com", "connect,resolve";
 - **custom image**
+  - by default, Loginbuddy has built in images for amazon, apple, github, google, linkedin, loginid, pingone, self-issued, no need to do anything if one of those is your providers
   - if you want to use a custom image for the provider selection button do this:
     - create a png image and name it *google* (google.png). Generally, the image name (provider-name) has to match the value you chose for *{..."provider": "provider-name"...}* in *config.json*
     - in *docker-compose.yml* add an entry to the volumes for *loginbuddy*. Point and map it to your image (follow the example of *server_dynamic.png*)
-    - by default, Loginbuddy has built in images for amazon, apple, github, google, linkedin, loginid, pingone, self-issued
 
-Launch the setup as before
+Build and launch the setup as before:
+- See **Build the samples**, **Launch the samples**
 - Open a browser at **https://democlient.loginbuddy.net** and select the image of *Sign in with Google*
 - follow the prompts
 
 For more info, look into the [Configuration](Configuration) document.
 
-## CLuster demo
+## Cluster demo
 
-Please follow the cluster build and usage instructions at: **./docker-build/add-ons/cluster/README.md**.
+The samples project supports a first version of a cluster setup. Please follow the cluster build and usage instructions at:
 
-In order to try out the cluster:
+- **./docker-build/add-ons/cluster/README.md**
 
-- `docker-compose -f docker-compose-cluster.yml up`
-  - this will include a loadbalancer, two loginbuddy, two hazelcast, one loginbuddy-sidecar, one loginbuddy-oidcdr, one democlient, one demoserver
+In order to try out the cluster after following the README instructions, run this:
+
+- `docker-compose -f docker-compose-cluster.yml up`  // to use the setup with https - http
+- `docker-compose -f docker-compose-cluster-tls.yml up`  // to use the setup with https - https
+
+If you now open a browser you will not see any difference as before, but behind the scenes the demo client is now connecting to the nginx loadbalancer.
 
 If you are not sure what Loginbuddy can do for you, please refer to **Deployment**, **Development** and **Configuration** in this WIKI.
