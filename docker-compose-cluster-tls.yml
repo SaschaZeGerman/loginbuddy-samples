@@ -29,7 +29,7 @@ services:
       - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast2:5701"
 
   loginbuddy1:
-    image: local/loginbuddy-http:latest
+    image: saschazegerman/loginbuddy:latest
     container_name: loginbuddy1
     hostname: loginbuddy1
     restart: always
@@ -39,7 +39,6 @@ services:
       timeout: 15s
       retries: 5
     depends_on:
-      - loginbuddy-demoserver
       - hazelcast1
       - hazelcast2
     volumes:
@@ -48,7 +47,10 @@ services:
       - ./docker-build/add-ons/loginbuddy/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
       - ./docker-build/add-ons/loginbuddy/server_loginbuddy.png:/usr/local/tomcat/webapps/ROOT/images/server_loginbuddy.png
       - ./docker-build/add-ons/loginbuddy/server_dynamic.png:/usr/local/tomcat/webapps/ROOT/images/server_dynamic.png
+      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
     environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "SSL_PORT=8444"
       - "SUPPORT_OIDCDR=true"
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
@@ -56,7 +58,7 @@ services:
       - "STORAGE=HAZELCAST[hazelcast1:5701,hazelcast2:5701]"
 
   loginbuddy2:
-    image: local/loginbuddy-http:latest
+    image: saschazegerman/loginbuddy:latest
     container_name: loginbuddy2
     hostname: loginbuddy2
     restart: always
@@ -66,7 +68,6 @@ services:
       timeout: 15s
       retries: 5
     depends_on:
-      - loginbuddy-demoserver
       - hazelcast1
       - hazelcast2
     volumes:
@@ -75,7 +76,10 @@ services:
       - ./docker-build/add-ons/loginbuddy/discovery.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/discovery.json
       - ./docker-build/add-ons/loginbuddy/server_loginbuddy.png:/usr/local/tomcat/webapps/ROOT/images/server_loginbuddy.png
       - ./docker-build/add-ons/loginbuddy/server_dynamic.png:/usr/local/tomcat/webapps/ROOT/images/server_dynamic.png
+      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
     environment:
+      - "SSL_PWD=${SSL_PWD}"
+      - "SSL_PORT=8444"
       - "SUPPORT_OIDCDR=true"
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
@@ -83,15 +87,15 @@ services:
       - "STORAGE=HAZELCAST[hazelcast1:5701,hazelcast2:5701]"
 
   loginbuddy:
-    image: local/loadbalancer-http:latest
-    container_name: loginbuddy
+    image: local/loadbalancer:latest
+    container_name: loadbalancer
     hostname: local.loginbuddy.net
     restart: always
-    depends_on:
-      loginbuddy1:
-        condition: "service_healthy"
-      loginbuddy2:
-        condition: "service_healthy"
+#    depends_on:
+#      loginbuddy1:
+#        condition: "service_healthy"
+#      loginbuddy2:
+#        condition: "service_healthy"
     ports:
       - "8444:8444"
 

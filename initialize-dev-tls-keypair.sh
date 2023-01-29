@@ -15,6 +15,7 @@ export $(cat .env | grep SSL_PWD)
 rm -f dev/loginbuddy.p12
 rm -f dev/loginbuddy_client.p12
 rm -f dev/loginbuddy_server.p12
+rm -f docker-build/add-ons/cluster/loginbuddy.crt
 
 # Create private key for LOGINBUDDY
 #
@@ -27,7 +28,16 @@ keytool -genkey \
   -validity 365 \
   -keysize 2048 \
   -dname "CN=${HOSTNAME_LOGINBUDDY}" \
-  -ext san=dns:${HOSTNAME_LOGINBUDDY},dns:localhost
+  -ext san=dns:${HOSTNAME_LOGINBUDDY},dns:loginbuddy.cluster.node,dns:localhost
+
+# Export Loginbuddy public cert to be imported into the loadbalancer to support SSL between loadbalancer and Loginbuddy
+#
+keytool -exportcert \
+  -alias loginbuddy \
+  -file docker-build/add-ons/cluster/loginbuddy.crt \
+  -keystore dev/loginbuddy.p12 \
+  -storepass ${SSL_PWD} \
+  -rfc
 
 # Create private key for DEMOCLIENT
 #

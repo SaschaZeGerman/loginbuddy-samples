@@ -26,3 +26,6 @@ dev/
 .env*
 
 hsperfdata_root
+
+docker-build/add-ons/cluster/*.key
+docker-build/add-ons/cluster/*.crt

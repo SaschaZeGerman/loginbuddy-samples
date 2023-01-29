@@ -1,0 +1,15 @@
+# Loginbuddy with http specific configurations
+#
+FROM saschazegerman/loginbuddy:latest
+
+# adding port 8080 for http with no redirect to SSL
+#
+COPY loginbuddy_http/conf/server.xml /usr/local/tomcat/conf/server.xml
+
+# removing security groups for admin pages
+#
+COPY loginbuddy_http/webapps/WEB-INF/web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/web.xml
+
+# configure logging level (INFO by default)
+#
+COPY loginbuddy_http/conf/logging.properties /usr/local/tomcat/conf/logging.properties
