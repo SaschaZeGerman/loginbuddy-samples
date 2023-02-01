@@ -23,6 +23,7 @@ public class LoginbuddyProviderConfiguration extends LoginbuddyProviderCommon {
         obj.put(Constants.USERINFO_ENDPOINT.getKey(), String.format("%s/userinfo", location_demoserver));
         obj.put(Constants.JWKS_URI.getKey(), String.format("%s/jwks", location_demoserver));
         obj.put(Constants.REGISTRATION_ENDPOINT.getKey(), String.format("%s/register", location_demoserver));
+        obj.put(Constants.PUSHED_AUTHORIZATION_REQUEST_ENDPOINT.getKey(), String.format("%s/pauthorize", location_demoserver));
 
         JSONArray values = new JSONArray();
         values.add("openid");
@@ -48,6 +49,6 @@ public class LoginbuddyProviderConfiguration extends LoginbuddyProviderCommon {
         values.add("ES256");
         obj.put(Constants.ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED.getKey(), values);
 
-        response.getWriter().print(obj.toJSONString());
+        response.getWriter().println(obj.toJSONString());
     }
 }

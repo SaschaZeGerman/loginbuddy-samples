@@ -34,78 +34,97 @@ public class LoginbuddyProviderAuthorize extends LoginbuddyProviderCommon {
 
     try {
 
-      /*
-       * All the parameters below need to be validated. But, since this is just for demo purposes, they are mostly used 'as is'.
-       * In the future this could be turned into a 'real' /authorization endpoint.
-       *
-       */
-      String nonce = request.getParameter(Constants.NONCE.getKey());
-      if (nonce == null || nonce.trim().length() == 0) {
-        throw new IllegalArgumentException("The nonce is invalid or missing");
-      }
-
-      String state = request.getParameter(Constants.STATE.getKey());
-      if (state == null || state.trim().length() == 0) {
-        throw new IllegalArgumentException("The state is invalid or missing");
-      }
-
-      // Currently only response_type=code is supported. Let's check for that to simulate a more realistic behaviour
-      String response_type = request.getParameter(Constants.RESPONSE_TYPE.getKey());
-      if (!"code".equals(response_type)) {
-        throw new IllegalArgumentException("The given response_type is not supported");
-      }
-
-      // TODO: Validate if this is a valid client_id
-      String clientId = request.getParameter(Constants.CLIENT_ID.getKey());
-      if (clientId == null || clientId.trim().length() == 0) {
-        throw new IllegalArgumentException("The client_id is missing");
-      }
-
-      // TODO: Validate if the SCOPE for this client is valid
-      String scope = request.getParameter(Constants.SCOPE.getKey());
-      if (scope == null || scope.trim().length() == 0) {
-        throw new IllegalArgumentException("The scope is missing");
-      }
-
-      String code_challenge = request.getParameter(Constants.CODE_CHALLENGE.getKey());
-      if (!Pkce.verifyChallenge(code_challenge)) {
-        throw new IllegalArgumentException("Invalid code_challenge");
-      }
-
-      // We always require S256
-      String code_challenge_method = request.getParameter(Constants.CODE_CHALLENGE_METHOD.getKey());
-      if (!Pkce.CODE_CHALLENGE_METHOD_S256.equalsIgnoreCase(code_challenge_method)) {
-        throw new IllegalArgumentException("The given code_challenge_method is not supported!");
-      }
-
-      // TODO: Validate the redirect_uri to be one registered for the client_id.
-      String redirectUri = request.getParameter(Constants.REDIRECT_URI.getKey());
-      if (redirectUri == null || redirectUri.trim().length() == 0 || !redirectUri.startsWith(scheme)) {
-        throw new IllegalArgumentException(String.format("The given redirect_uri is not valid. '%s' schema is not supported!", scheme));
-      }
-
-      String loginHint = request.getParameter(Constants.LOGIN_HINT.getKey());
-      if (loginHint != null && loginHint.trim().length() <= 24 && !loginHint.equalsIgnoreCase("null")) {
-        loginHint = String.format("&login_hint=%s", URLEncoder.encode(loginHint, StandardCharsets.UTF_8));
+      // Handle the PAR request (just check if the given clientId matches the initial one, otherwise ... this is just for demo purposes)
+      String requestUri = request.getParameter(Constants.REQUEST_URI.getKey());
+      if (requestUri != null) {
+        SessionContext sessionContext = (SessionContext) LoginbuddyCache.CACHE.remove(requestUri.replaceAll("urn:loginbuddy-samples:", ""));
+        if(sessionContext == null) {
+          throw new IllegalArgumentException("The given redirect_uri is invalid or has expired");
+        }
+        String clientId = (String)sessionContext.get(Constants.CLIENT_ID.getKey());
+        if(clientId != null && clientId.equals(request.getParameter(Constants.CLIENT_ID.getKey()))) {
+          LoginbuddyCache.CACHE.put(sessionContext.getId(), sessionContext);
+          // forward to a fake login page
+          request.getRequestDispatcher(String.format("demoserverUsername.jsp?session=%s%s", sessionContext.getId(), LoginbuddyCache.CACHE.remove(requestUri))).forward(request, response);
+        } else {
+          throw new IllegalArgumentException("The given client_id is invalid. It should match the one used with the initial PAR request");
+        }
       } else {
-        loginHint = "";
+
+        /*
+         * All the parameters below need to be validated. But, since this is just for demo purposes, they are mostly used 'as is'.
+         * In the future this could be turned into a 'real' /authorization endpoint.
+         *
+         */
+        String nonce = request.getParameter(Constants.NONCE.getKey());
+        if (nonce == null || nonce.trim().length() == 0) {
+          throw new IllegalArgumentException("The nonce is invalid or missing");
+        }
+
+        String state = request.getParameter(Constants.STATE.getKey());
+        if (state == null || state.trim().length() == 0) {
+          throw new IllegalArgumentException("The state is invalid or missing");
+        }
+
+        // Currently only response_type=code is supported. Let's check for that to simulate a more realistic behaviour
+        String response_type = request.getParameter(Constants.RESPONSE_TYPE.getKey());
+        if (!"code".equals(response_type)) {
+          throw new IllegalArgumentException("The given response_type is not supported");
+        }
+
+        // TODO: Validate if this is a valid client_id
+        String clientId = request.getParameter(Constants.CLIENT_ID.getKey());
+        if (clientId == null || clientId.trim().length() == 0) {
+          throw new IllegalArgumentException("The client_id is missing");
+        }
+
+        // TODO: Validate if the SCOPE for this client is valid
+        String scope = request.getParameter(Constants.SCOPE.getKey());
+        if (scope == null || scope.trim().length() == 0) {
+          throw new IllegalArgumentException("The scope is missing");
+        }
+
+        String code_challenge = request.getParameter(Constants.CODE_CHALLENGE.getKey());
+        if (!Pkce.verifyChallenge(code_challenge)) {
+          throw new IllegalArgumentException("Invalid code_challenge");
+        }
+
+        // We always require S256
+        String code_challenge_method = request.getParameter(Constants.CODE_CHALLENGE_METHOD.getKey());
+        if (!Pkce.CODE_CHALLENGE_METHOD_S256.equalsIgnoreCase(code_challenge_method)) {
+          throw new IllegalArgumentException("The given code_challenge_method is not supported!");
+        }
+
+        // TODO: Validate the redirect_uri to be one registered for the client_id.
+        String redirectUri = request.getParameter(Constants.REDIRECT_URI.getKey());
+        if (redirectUri == null || redirectUri.trim().length() == 0 || !redirectUri.startsWith(scheme)) {
+          throw new IllegalArgumentException(String.format("The given redirect_uri is not valid. '%s' schema is not supported!", scheme));
+        }
+
+        String loginHint = request.getParameter(Constants.LOGIN_HINT.getKey());
+        if (loginHint != null && loginHint.trim().length() <= 24 && !loginHint.equalsIgnoreCase("null")) {
+          loginHint = String.format("&login_hint=%s", URLEncoder.encode(loginHint, StandardCharsets.UTF_8));
+        } else {
+          loginHint = "";
+        }
+
+        // Need to remember all these values for the current session
+        SessionContext sessionContext = new SessionContext();
+        sessionContext.sessionInit(
+                clientId,
+                scope,
+                response_type,
+                code_challenge,
+                code_challenge_method,
+                redirectUri,
+                nonce,
+                state);
+        LoginbuddyCache.CACHE.put(sessionContext.getId(), sessionContext);
+
+        // forward to a fake login page
+        request.getRequestDispatcher(String.format("demoserverUsername.jsp?session=%s%s", sessionContext.getId(), loginHint)).forward(request, response);
+
       }
-
-      // Need to remember all these values for the current session
-      SessionContext sessionContext = new SessionContext();
-      sessionContext.sessionInit(
-          clientId,
-          scope,
-          response_type,
-          code_challenge,
-          code_challenge_method,
-          redirectUri,
-          nonce,
-          state);
-      LoginbuddyCache.CACHE.put(sessionContext.getId(), sessionContext);
-
-      // forward to a fake login page
-      request.getRequestDispatcher(String.format("demoserverUsername.jsp?session=%s%s", sessionContext.getId(), loginHint)).forward(request, response);
     } catch (Exception e) {
       LOGGER.warning("The authorization request was invalid");
       e.printStackTrace();

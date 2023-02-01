@@ -59,6 +59,10 @@
         <servlet-name>LoginbuddyRegistration</servlet-name>
         <servlet-class>net.loginbuddy.demoserver.provider.LoginbuddyProviderRegister</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginbuddyProviderPauthorize</servlet-name>
+        <servlet-class>net.loginbuddy.demoserver.provider.LoginbuddyProviderPauthorize</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>LoginbuddyProviderAuthorize</servlet-name>
@@ -95,6 +99,10 @@
     <servlet-mapping>
         <servlet-name>LoginbuddyRegistration</servlet-name>
         <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginbuddyProviderPauthorize</servlet-name>
+        <url-pattern>/pauthorize</url-pattern>
     </servlet-mapping>
 
     <resource-env-ref>
