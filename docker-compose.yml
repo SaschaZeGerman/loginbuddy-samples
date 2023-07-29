@@ -18,8 +18,9 @@ services:
       - "DEMOCLIENT_HOSTNAME=democlient.loginbuddy.net"
       - "DEMOCLIENT_LOCATION=https://democlient.loginbuddy.net"
       - "DEMOCLIENT_LOCATION_LOGINBUDDY=https://local.loginbuddy.net:8444"
+      - "SSL_TRUSTED_SERVER=loginbuddy:8444"
     volumes:
-      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+      - ./dev/loginbuddy_client.p12:/usr/local/tomcat/ssl/loginbuddy.p12
 
   loginbuddy-demoserver:
     image: saschazegerman/loginbuddy-demoserver:latest
@@ -34,7 +35,7 @@ services:
       - "DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net"
       - "DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443"
     volumes:
-      - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
+      - ./dev/loginbuddy_server.p12:/usr/local/tomcat/ssl/loginbuddy.p12
 
   loginbuddy:
     image: saschazegerman/loginbuddy:latest

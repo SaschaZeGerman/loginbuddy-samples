@@ -29,26 +29,6 @@
 
         <Connector port="80" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="@@sslport@@" parseBodyMethods="POST,PUT"/>
 
-        <Connector
-                SSLEnabled="true"
-                secure="true"
-                scheme="https"
-                port="@@sslport@@"
-                defaultSSLHostConfigName="@@hostname@@"
-                protocol="org.apache.coyote.http11.Http11NioProtocol"
-                maxThreads="150"
-                parseBodyMethods="POST,PUT">
-            <SSLHostConfig hostName="@@hostname@@"
-                           protocols="TLSv1.2"
-                           sslProtocol="TLS">
-                <Certificate
-                        certificateKeystoreFile="/usr/local/tomcat/ssl/loginbuddy.p12"
-                        certificateKeystorePassword="@@sslpwd@@"
-                        certificateKeyAlias="loginbuddy"
-                        certificateVerification="true"/>
-            </SSLHostConfig>
-        </Connector>
-
         <Engine name="Catalina" defaultHost="@@hostname@@">
             <Host name="@@hostname@@" appBase="webapps" unpackWARs="true" autoDeploy="true">
                 <Alias>@@hostname@@</Alias>

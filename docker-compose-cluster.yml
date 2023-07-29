@@ -85,11 +85,11 @@ services:
     container_name: loginbuddy
     hostname: local.loginbuddy.net
     restart: always
-    depends_on:
-      loginbuddy1:
-        condition: "service_healthy"
-      loginbuddy2:
-        condition: "service_healthy"
+#    depends_on:
+#      loginbuddy1:
+#        condition: "service_healthy"
+#      loginbuddy2:
+#        condition: "service_healthy"
     ports:
       - "8444:8444"
 
