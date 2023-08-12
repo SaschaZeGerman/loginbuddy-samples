@@ -45,7 +45,7 @@ Run these files to set up the dev environment and dev key pairs:
 
 ### Build the samples
 
-This is one command only:
+Only one command is needed to build the project:
 
 - `make build_all`  // this will use maven to build and compile the project, it will also build docker images
 
@@ -53,7 +53,7 @@ This is one command only:
 
 Loginbuddy is completely docker based:
 
-- `docker-compose up -d`  // to view the logging output, run it without the switch -d)
+- `docker-compose up -d`  // to view the logging output, run it without the switch -d
 - `docker-compose down` // once you want to stop the setup
 
 After launching the setup, you should find these running containers (`docker ps`)
@@ -121,7 +121,8 @@ To add another button to the selection of providers, only a few steps are needed
 
 ### Visit your OpenID Provider
 
-- Create a developer account at your target OpenID Provider (try Google for a start)
+- Create a developer account at your target OpenID Provider
+  - to start with google, go [here](https://console.cloud.google.com/apis/credentials)
 - Register an OAuth application using these details:
   - **client type:** *confidential* or *web application*
   - **redirect_uri:** *https://local.loginbuddy.net:8444/callback*

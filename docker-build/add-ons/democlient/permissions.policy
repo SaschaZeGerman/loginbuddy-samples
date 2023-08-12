@@ -12,6 +12,7 @@ grant codeBase "file:${catalina.home}/webapps/ROOT/-" {
     permission java.lang.RuntimePermission "getenv.HAZELCAST";
     permission java.lang.RuntimePermission "getenv.LOGINBUDDY_SIDECAR_LOCATION";
     permission java.lang.RuntimePermission "getenv.SUPPORT_OIDCDR";
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.webresources";
 
     // required as of upgrade to tomcat with jdk11
     permission java.net.NetPermission "specifyStreamHandler";

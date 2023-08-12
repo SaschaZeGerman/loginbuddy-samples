@@ -76,13 +76,17 @@ public class SideCar extends HttpServlet {
             if (!sessionValues.get(Constants.CLIENT_STATE.getKey()).equals(loginbuddyResponse.getState())) {
                 throw new RuntimeException("Unexpected state");
             }
-            // expected nonce?
-            if (!sessionValues.get(Constants.CLIENT_NONCE.getKey()).equals(loginbuddyResponse.getLoginbuddyDetails().getNonce())) {
-                throw new RuntimeException("Unexpected nonce");
-            }
-            // expected provider?
-            if (!sessionValues.get(Constants.CLIENT_PROVIDER.getKey()).equals(loginbuddyResponse.getProviderDetails().getProvider())) {
-                throw new RuntimeException("Unexpected provider");
+
+            // LoginbuddyResponse will only include error and error_description and state for error responses
+            if(loginbuddyResponse.getError() == null) {
+                // expected nonce?
+                if (!sessionValues.get(Constants.CLIENT_NONCE.getKey()).equals(loginbuddyResponse.getLoginbuddyDetails().getNonce())) {
+                    throw new RuntimeException("Unexpected nonce");
+                }
+                // expected provider?
+                if (!sessionValues.get(Constants.CLIENT_PROVIDER.getKey()).equals(loginbuddyResponse.getProviderDetails().getProvider())) {
+                    throw new RuntimeException("Unexpected provider");
+                }
             }
 
             // Handle the response so that this client can display it to the user
