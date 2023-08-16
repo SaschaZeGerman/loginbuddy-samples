@@ -167,6 +167,10 @@ In order to try out the cluster after following the README instructions, run thi
 - `docker-compose -f docker-compose-cluster.yml up`  // to use the setup with https - http
 - `docker-compose -f docker-compose-cluster-tls.yml up`  // to use the setup with https - https
 
-If you now open a browser you will not see any difference as before, but behind the scenes the demo client is now connecting to the nginx loadbalancer.
+If you now open a browser at `https://democlient.loginbuddy.net` you will not see any difference as before, but behind the scenes the demo client is now connecting to the nginx loadbalancer.
+
+To shut down the project run the compose command with **...down** as before.
+
+## Summary
 
 If you are not sure what Loginbuddy can do for you, please refer to **Deployment**, **Development** and **Configuration** in this WIKI.

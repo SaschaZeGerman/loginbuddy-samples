@@ -75,3 +75,5 @@ This will produce new images
 - loginbuddy1, loginbuddy2 connect to **hazelcast1:5701**, **hazelcast2:5701** which is a hazelcast cluster for shared caching, session management and storage
 - loginbuddy1, loginbuddy2 connect to OpenID Connect providers
 - OpenID Connect providers redirect back to loadbalancer
+
+You can now return to the root of the project and continue with instructions of the **README.md** file.
