@@ -111,7 +111,7 @@ The response includes all values as returned by the provider, plus three fields:
 The response is exactly the response as returned from Loginbuddy to the client. That means, if you are developing a client that uses Loginbuddy,
 you can use this view to know what you have to handle.
 
-## Add a new OpenID Provider
+## Register Loginbuddy at an OpenID Provider (Loginbuddy as Relying Party (RP))
 
 To add another button to the selection of providers, only a few steps are needed:
 
@@ -126,6 +126,9 @@ To add another button to the selection of providers, only a few steps are needed
 - Register an OAuth application using these details:
   - **client type:** *confidential* or *web application*
   - **redirect_uri:** *https://local.loginbuddy.net:8444/callback*
+  - **response_type:** usually not a question, but, if you get to it, opt-in for *response_type=code* and *grant_type=authorization_code*. Sometimes this is also called *three-legged flow*
+  - **client authentication methods:** this is even more rarely, but if you are asked how Loginbuddy authenticates itself at the providers token endpoint, configure *client_secret_post*
+    - this setting is called *token_endpoint_auth_methods_supported* in OpenID Connect terms
 - Note these values that google generates:
   - **client_id**
   - **client_secret**
@@ -136,7 +139,7 @@ You need to update a few files:
 
 - **./docker-build/add-ons/loginbuddy/config.json**
   - add a provider configuration for Google
-  - copy the example **provider: google** from *./docker-build/add-ons/templates/config_common_providers.json* into the provider section of *config.json* and fill in *client_id, client_secret* 
+  - copy the example **provider: google** from *./docker-build/add-ons/templates/config_common_providers.json* into the provider section of *config.json* and fill in *client_id, client_secret*
 - **./docker-build/add-ons/loginbuddy/permissions.policy**
   - Uncomment these lines:
     -     permission java.net.SocketPermission "accounts.google.com", "connect,resolve";
