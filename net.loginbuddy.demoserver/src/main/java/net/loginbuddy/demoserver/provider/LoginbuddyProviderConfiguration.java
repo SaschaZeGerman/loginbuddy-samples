@@ -37,6 +37,7 @@ public class LoginbuddyProviderConfiguration extends LoginbuddyProviderCommon {
 
         values = new JSONArray();
         values.add("authorization_code");
+        values.add("refresh_token");
         obj.put(Constants.GRANT_TYPES_SUPPORTED.getKey(), values);
 
         values = new JSONArray();
