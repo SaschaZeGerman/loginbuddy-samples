@@ -59,6 +59,7 @@ services:
       - "SUPPORT_OIDCDR=true"
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
+      - "SECRET_OBFUSCATION=${SECRET_OBFUSCATION}"
 #      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
 
   loginbuddy-sidecar:
@@ -71,6 +72,7 @@ services:
     environment:
       - "SUPPORT_OIDCDR=true"
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
+      - "SECRET_OBFUSCATION=${SECRET_OBFUSCATION}"
     volumes:
       - ./docker-build/add-ons/loginbuddy-sidecar/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
       - ./docker-build/add-ons/loginbuddy-sidecar/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json

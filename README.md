@@ -42,6 +42,7 @@ Run these files to set up the dev environment and dev key pairs:
 
 - `sh initialize-dev-environment.sh`  // once
 - `sh initialize-dev-tls-keypair.sh`  // whenever you want to update the development key pair
+- `sh initialize-dev-obfuscation-secret.sh`  // whenever you want to update the secret for encrypting/decrypting token when obfuscation is requested
 
 ### Build the samples
 
@@ -74,7 +75,7 @@ After launching the setup, you should find these running containers (`docker ps`
   - this is Loginbuddys container that handles dynamic registrations
   - it works in conjunction with Loginbuddy standalone and sidecar containers
 
-The containers listen these ports:
+The containers listen on these ports:
 
 - democlient: 80, 443
 - demoserver: 8443
