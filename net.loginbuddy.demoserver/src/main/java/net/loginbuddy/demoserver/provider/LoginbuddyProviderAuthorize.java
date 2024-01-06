@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 public class LoginbuddyProviderAuthorize extends LoginbuddyProviderCommon {
 
-  private static final Logger LOGGER = Logger.getLogger(String.valueOf(LoginbuddyProviderAuthorize.class));
+  private static final Logger LOGGER = Logger.getLogger(LoginbuddyProviderAuthorize.class.getName());
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -126,8 +126,7 @@ public class LoginbuddyProviderAuthorize extends LoginbuddyProviderCommon {
 
       }
     } catch (Exception e) {
-      LOGGER.warning("The authorization request was invalid");
-      e.printStackTrace();
+      LOGGER.warning(String.format("The authorization request was invalid: %s", e.getMessage()));
       response.setStatus(404);
       response.setContentType("application/json; charset=UTF-8");
       response.getWriter().println(
@@ -266,8 +265,7 @@ public class LoginbuddyProviderAuthorize extends LoginbuddyProviderCommon {
         response.sendError(400, "Unknown API was called!");
       }
     } catch (ServletException e) {
-      LOGGER.warning("Something in the FakeProvider went badly wrong!");
-      e.printStackTrace();
+      LOGGER.warning(String.format("Something in the FakeProvider went badly wrong! %s", e.getMessage()));
       response.sendError(500, "Something in the FakeProvider went badly wrong!");
     }
   }

@@ -18,8 +18,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class SideCar extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(SideCar.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -98,7 +101,7 @@ public class SideCar extends HttpServlet {
         } catch (LoginbuddyToolsException e) {
             response.sendError(e.getHttpStatus(), e.getErrorDescription());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warning(e.getMessage());
             response.sendError(400, e.getMessage());
         }
     }

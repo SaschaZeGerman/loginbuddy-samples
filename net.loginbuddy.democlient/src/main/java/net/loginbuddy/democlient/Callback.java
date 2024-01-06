@@ -21,8 +21,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Callback extends LoginbuddyDemoclientCommon {
+
+  private static final Logger LOGGER = Logger.getLogger(Callback.class.getName());
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,7 +65,7 @@ public class Callback extends LoginbuddyDemoclientCommon {
         response.sendRedirect(String.format("democlientCallback.jsp?state=%s", clientState));
 
       } catch (Exception e) {
-        e.printStackTrace();
+        LOGGER.warning(e.getMessage());
       }
     } else if (error != null) {
       response.sendRedirect(String.format("democlientCallback.jsp?state=%s&error=%s&error_description=%s", clientState,

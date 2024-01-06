@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 public class LoginbuddyProviderUserinfo extends LoginbuddyProviderCommon {
 
-    private static final Logger LOGGER = Logger.getLogger(String.valueOf(LoginbuddyProviderUserinfo.class));
+    private static final Logger LOGGER = Logger.getLogger(LoginbuddyProviderUserinfo.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

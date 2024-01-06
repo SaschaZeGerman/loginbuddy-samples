@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 public abstract class LoginbuddyDemoclientCommon extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(String.valueOf(LoginbuddyDemoclientCommon.class));
+    private static final Logger LOGGER = Logger.getLogger(LoginbuddyDemoclientCommon.class.getName());
 
     protected String location_democlient;
     protected String location_loginbuddy;

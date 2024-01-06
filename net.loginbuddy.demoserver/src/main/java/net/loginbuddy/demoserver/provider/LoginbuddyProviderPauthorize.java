@@ -12,7 +12,6 @@
  */
 package net.loginbuddy.demoserver.provider;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.loginbuddy.common.cache.LoginbuddyCache;
@@ -22,7 +21,6 @@ import net.loginbuddy.common.util.Pkce;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 public class LoginbuddyProviderPauthorize extends LoginbuddyProviderCommon {

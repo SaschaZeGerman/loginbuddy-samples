@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public class Initialize extends LoginbuddyDemoclientCommon {
 
-  private static final Logger LOGGER = Logger.getLogger(String.valueOf(Initialize.class));
+  private static final Logger LOGGER = Logger.getLogger(Initialize.class.getName());
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

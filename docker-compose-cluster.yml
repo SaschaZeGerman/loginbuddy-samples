@@ -75,6 +75,7 @@ services:
       - ./docker-build/add-ons/loginbuddy/server_dynamic.png:/usr/local/tomcat/webapps/ROOT/images/server_dynamic.png
     environment:
       - "SUPPORT_OIDCDR=true"
+      - "SECRET_OBFUSCATION=${SECRET_OBFUSCATION}"
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
       - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
@@ -105,6 +106,7 @@ services:
       - loginbuddy-demoserver
     environment:
       - "SUPPORT_OIDCDR=true"
+      - "SECRET_OBFUSCATION=${SECRET_OBFUSCATION}"
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
     volumes:
       - ./docker-build/add-ons/loginbuddy-sidecar/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy

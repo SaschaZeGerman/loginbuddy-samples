@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public abstract class LoginbuddyProviderCommon extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(String.valueOf(LoginbuddyProviderCommon.class));
+    private static final Logger LOGGER = Logger.getLogger(LoginbuddyProviderCommon.class.getName());
 
     protected String location_demoserver;
     protected String scheme;
@@ -45,7 +45,7 @@ public abstract class LoginbuddyProviderCommon extends HttpServlet {
                 md = MessageDigest.getInstance("SHA-1");
             } catch (NoSuchAlgorithmException e) {
                 // should never happen
-                e.printStackTrace();
+                LOGGER.severe(e.getMessage());
             }
             return new String(Base64.getUrlEncoder().encode(md.digest(ppidSub.getBytes()))).replace("=", "").replace("-", "");
         } else {
