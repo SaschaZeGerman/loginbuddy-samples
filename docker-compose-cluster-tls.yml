@@ -103,7 +103,7 @@ services:
 #
 
   loginbuddy-sidecar:
-    image: saschazegerman/loginbuddy-sidecar:latest
+    image: saschazegerman/loginbuddy:latest
     container_name: loginbuddy-sidecar
     hostname: loginbuddy-sidecar
     restart: always

@@ -28,7 +28,7 @@ keytool -genkey \
   -validity 365 \
   -keysize 2048 \
   -dname "CN=${HOSTNAME_LOGINBUDDY}" \
-  -ext san=dns:${HOSTNAME_LOGINBUDDY},dns:loginbuddy.cluster.node,dns:localhost
+  -ext san=dns:${HOSTNAME_LOGINBUDDY},dns:loginbuddy.cluster.node,dns:loginbuddy,dns:localhost
 
 # Export Loginbuddy public cert to be imported into the loadbalancer to support SSL between loadbalancer and Loginbuddy
 #

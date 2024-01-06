@@ -17,7 +17,7 @@ The cluster setup is represented like this in the demo:
 - *local.loginbuddy.net*: Loadbalancer
 - *loginbuddy1*, *loginbuddy2*: standalone Loginbuddy instances
 - *hazelcast1*, *hazelcast2*: external hazelcast instances
-- *demoserver.loginbuddy.net*: OpenID provider
+- *demoserver.loginbuddy.net*: OpenID provider 
 
 ## Configuration 1: https - http
 
@@ -37,7 +37,7 @@ Update the **nginx_ssl_ssl.conf** to your needs. By default, it uses these value
   - Loginbuddy listening on https port 8444 which is not exposed externally
 - **Loadbalancer**
   - listens on SSL port 8444 (which requires no updates of the samples project)
-  - proxies requests (round robin) to any Loginbuddy instance as configured in nginx_ssl.conf
+  - proxies requests (round robin) to any Loginbuddy instance as configured in nginx_ssl_ssl.conf
 
 ## Loadbalancer key and cert for inbound SSL connections
 
@@ -45,7 +45,7 @@ For development purposes, run this command to create a key and a certificate:
 
 - `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout loadbalancer.key -out loadbalancer.crt -subj "/CN=local.loginbuddy.net"`
   
-FYI: Find a discussion on non-interactive cert creation here:
+**FYI**: Find a discussion on non-interactive cert creation here:
 
 - [non-interactive cert creation](https://serverfault.com/questions/649990/non-interactive-creation-of-ssl-certificate-requests)
 - example for subj: `-subj "/C=PE/ST=Lima/L=Lima/O=Acme Inc. /OU=IT Department/CN=acme.com"`
@@ -69,7 +69,7 @@ This will produce new images
 
 ## Cluster setup
 
-- relying parties (clients) connect to **https://local.loginbuddy.net:8444** (which is the load balancer)
+- relying parties (clients, RPs) connect to **https://local.loginbuddy.net:8444** (which is the load balancer)
 - loadbalancer connects to **loginbuddy1:8080**, **loginbuddy2:8080**. Both have *local.loginbuddy.net* configured as hostname
   - with configuration 2 the loadbalancer connects to **loginbuddy1:8444**, **loginbuddy2:8444**
 - loginbuddy1, loginbuddy2 connect to **hazelcast1:5701**, **hazelcast2:5701** which is a hazelcast cluster for shared caching, session management and storage
