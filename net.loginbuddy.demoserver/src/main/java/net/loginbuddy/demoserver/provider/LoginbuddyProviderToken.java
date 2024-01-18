@@ -69,7 +69,7 @@ public class LoginbuddyProviderToken extends LoginbuddyProviderCommon {
         String refresh_token = "FAKE_".concat(UUID.randomUUID().toString());
         fakeProviderResponse.put(Constants.ACCESS_TOKEN.getKey(), access_token);
         fakeProviderResponse.put(Constants.REFRESH_TOKEN.getKey(), refresh_token);
-        fakeProviderResponse.put("token_type", "Bearer");
+        fakeProviderResponse.put("token_type", "dpop");
         fakeProviderResponse.put("expires_in", 3600);
         if(request.getParameter("scope") != null && request.getParameter("scope").trim().length() > 0) {
             fakeProviderResponse.put("scope", request.getParameter("scope"));

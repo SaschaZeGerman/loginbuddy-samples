@@ -39,7 +39,7 @@ public class LoginbuddyProviderUserinfo extends LoginbuddyProviderCommon {
         if (access_token == null || access_token.trim().length() == 0) {
             // not found, let's check the authorization header
             String authHeader = request.getHeader(Constants.AUTHORIZATION.getKey());
-            if (authHeader != null && Stream.of(authHeader.split(" ")).anyMatch("bearer"::equalsIgnoreCase)) {
+            if (authHeader != null && Stream.of(authHeader.split(" ")).anyMatch("dpop"::equalsIgnoreCase)) {
                 access_token = authHeader.split(" ")[1];
             } else {
                 LOGGER.warning("the access_token is missing");
