@@ -11,10 +11,11 @@ import java.util.logging.Logger;
 
 public abstract class LoginbuddyProviderCommon extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(String.valueOf(LoginbuddyProviderCommon.class));
+    private static final Logger LOGGER = Logger.getLogger(LoginbuddyProviderCommon.class.getName());
 
     protected String location_demoserver;
     protected String scheme;
+    protected String tokenType;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -26,6 +27,8 @@ public abstract class LoginbuddyProviderCommon extends HttpServlet {
         } else {
             scheme = "https";
         }
+        tokenType = System.getenv("DEMOSERVER_TOKEN_TYPE");
+        tokenType = tokenType == null ? "Bearer" : "dpop".equalsIgnoreCase(tokenType) ? "DPop" : "Bearer";
     }
 
     /**

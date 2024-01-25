@@ -14,4 +14,7 @@ grant codeBase "file:${catalina.home}/webapps/ROOT/-" {
 
     // permission to check if storage should be used
     permission java.lang.RuntimePermission "getenv.STORAGE";
+
+    // permission to check if dpop token type should be issued
+    permission java.lang.RuntimePermission "getenv.DEMOSERVER_TOKEN_TYPE";
 };

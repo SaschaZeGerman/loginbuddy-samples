@@ -59,7 +59,7 @@
       "scope": "openid profile email",
       "response_type": "code",
       "redirect_uri": "https://local.loginbuddy.net:8444/callback",
-      "dpop_bound_access_tokens": true
+      "dpop_signing_alg": "RS256"
     }
   ]
 }
