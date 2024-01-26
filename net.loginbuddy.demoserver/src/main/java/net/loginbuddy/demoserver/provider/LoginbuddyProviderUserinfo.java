@@ -34,6 +34,12 @@ public class LoginbuddyProviderUserinfo extends LoginbuddyProviderCommon {
         // do we have an error?
         boolean error = false;
 
+        // not by spec. required here, but if the token_type is dpop, let's check for the parameter and the header anyways ...
+        if ("dpop".equalsIgnoreCase(tokenType)) {
+            if(checkForDpopProtected(request, response)) return;
+            if(checkForDpopNonceProtected(request, response)) return;
+        }
+
         // TODO: Handle access_token validation including RFC specific error responses. Well, this is all fake, so ... do not worry about it now
         String access_token = request.getParameter(Constants.ACCESS_TOKEN.getKey());
         if (access_token == null || access_token.trim().length() == 0) {

@@ -108,6 +108,13 @@ public class LoginbuddyProviderAuthorize extends LoginbuddyProviderCommon {
           loginHint = "";
         }
 
+        // not by spec. required here, but if the token_type is dpop, let's check for the parameter anyways ...
+        if("dpop".equalsIgnoreCase(tokenType)) {
+          if(request.getParameter("dpop_jkt") == null) {
+            throw new IllegalArgumentException("I require DPoP, and with that, dpop_jkt as a query parameter");
+          }
+        }
+
         // Need to remember all these values for the current session
         SessionContext sessionContext = new SessionContext();
         sessionContext.sessionInit(

@@ -17,15 +17,26 @@ import jakarta.servlet.http.HttpServletResponse;
 import net.loginbuddy.common.cache.LoginbuddyCache;
 import net.loginbuddy.common.config.Constants;
 import net.loginbuddy.common.util.Pkce;
+import org.jose4j.base64url.Base64;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class LoginbuddyProviderPauthorize extends LoginbuddyProviderCommon {
 
   private static final Logger LOGGER = Logger.getLogger(LoginbuddyProviderPauthorize.class.getName());
+
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.setHeader("Allow", "POST");
+    response.sendError(405, "Method not allowed");
+  }
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -87,6 +98,13 @@ public class LoginbuddyProviderPauthorize extends LoginbuddyProviderCommon {
         loginHint = String.format("&login_hint=%s", URLEncoder.encode(loginHint, StandardCharsets.UTF_8));
       } else {
         loginHint = "";
+      }
+
+      // not by spec. required here, but if the token_type is dpop, let's check for the parameter and the header anyways ...
+      if("dpop".equalsIgnoreCase(tokenType)) {
+        if(checkForDpop(request, response)) return;
+        if(checkForDpopJkt(request, response)) return;
+        if(checkForDpopNonce(request, response)) return;
       }
 
       // Need to remember all these values for the current session
