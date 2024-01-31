@@ -34,6 +34,7 @@ services:
       - "DEMOSERVER_SSL_PORT=8443"
       - "DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net"
       - "DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443"
+      - "DEMOSERVER_TOKEN_TYPE=Bearer"
     volumes:
       - ./dev/loginbuddy_server.p12:/usr/local/tomcat/ssl/loginbuddy.p12
 
@@ -46,6 +47,7 @@ services:
       - loginbuddy-demoserver
     ports:
       - "8444:8444"
+      - "8000:8000"
     volumes:
       - ./docker-build/add-ons/loginbuddy/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
       - ./docker-build/add-ons/loginbuddy/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
@@ -54,6 +56,7 @@ services:
       - ./docker-build/add-ons/loginbuddy/server_dynamic.png:/usr/local/tomcat/webapps/ROOT/images/server_dynamic.png
       - ./dev/loginbuddy.p12:/usr/local/tomcat/ssl/loginbuddy.p12
     environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
       - "SSL_PWD=${SSL_PWD}"
       - "SSL_PORT=8444"
       - "SUPPORT_OIDCDR=true"
@@ -83,6 +86,8 @@ services:
     container_name: loginbuddy-oidcdr
     hostname: loginbuddy-oidcdr
     restart: always
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8002"
 
 #  hazelcast1:
 #    image: hazelcast/hazelcast

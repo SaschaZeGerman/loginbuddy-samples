@@ -50,6 +50,13 @@ public class LoginbuddyProviderConfiguration extends LoginbuddyProviderCommon {
         values.add("ES256");
         obj.put(Constants.ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED.getKey(), values);
 
+        if("dpop".equalsIgnoreCase(tokenType)) {
+            values = new JSONArray();
+            values.add("RS256");
+            values.add("ES256");
+            obj.put(Constants.DPOP_SIGNING_ALG_VALUES_SUPPORTED.getKey(), values);
+        }
+
         response.getWriter().println(obj.toJSONString());
     }
 }

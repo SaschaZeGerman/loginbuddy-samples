@@ -15,6 +15,7 @@ import net.loginbuddy.common.config.Constants;
 import net.loginbuddy.common.util.Jwt;
 import net.loginbuddy.common.util.Pkce;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -37,6 +38,12 @@ public class LoginbuddyProviderToken extends LoginbuddyProviderCommon {
         response.addHeader("Cache-Control", "no-store");
         response.addHeader("Pragma", "no-cache");
         JSONObject resp = new JSONObject();
+
+        // not by spec. required here, but if the token_type is dpop, let's check for the parameter and the header anyways ...
+        if ("dpop".equalsIgnoreCase(tokenType)) {
+            if (checkForDpop(request, response)) return;
+            if (checkForDpopNonce(request, response)) return;
+        }
 
         // TODO: Handle multiple grant_types. But, since this is all fake, we'll just support 'authorization_code'
         String grant_type = request.getParameter(Constants.GRANT_TYPE.getKey());
@@ -69,9 +76,9 @@ public class LoginbuddyProviderToken extends LoginbuddyProviderCommon {
         String refresh_token = "FAKE_".concat(UUID.randomUUID().toString());
         fakeProviderResponse.put(Constants.ACCESS_TOKEN.getKey(), access_token);
         fakeProviderResponse.put(Constants.REFRESH_TOKEN.getKey(), refresh_token);
-        fakeProviderResponse.put("token_type", "Bearer");
+        fakeProviderResponse.put("token_type", tokenType);
         fakeProviderResponse.put("expires_in", 3600);
-        if(request.getParameter("scope") != null && request.getParameter("scope").trim().length() > 0) {
+        if (request.getParameter("scope") != null && request.getParameter("scope").trim().length() > 0) {
             fakeProviderResponse.put("scope", request.getParameter("scope"));
         }
 
@@ -148,6 +155,7 @@ public class LoginbuddyProviderToken extends LoginbuddyProviderCommon {
             fakeProviderResponse.put("expires_in", accessTokenLifetime);
             fakeProviderResponse.put("id_token", id_token);
             fakeProviderResponse.put("scope", sessionContext.get(Constants.SCOPE.getKey()));
+
         }
 
         response.setStatus(200);

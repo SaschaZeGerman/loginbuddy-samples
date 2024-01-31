@@ -58,7 +58,8 @@
       "jwks_uri": "https://demoserver.loginbuddy.net:8443/jwks",
       "scope": "openid profile email",
       "response_type": "code",
-      "redirect_uri": "https://local.loginbuddy.net:8444/callback"
+      "redirect_uri": "https://local.loginbuddy.net:8444/callback",
+      "dpop_signing_alg": "RS256"
     }
   ]
 }
