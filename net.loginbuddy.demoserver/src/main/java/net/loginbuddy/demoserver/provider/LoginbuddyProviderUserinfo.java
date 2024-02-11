@@ -29,6 +29,7 @@ public class LoginbuddyProviderUserinfo extends LoginbuddyProviderCommon {
 
         // Whatever happens, we'll return JSON
         response.setContentType("application/json");
+        JSONObject errorResponse = new JSONObject();
         JSONObject fakeUserinfoResponse = new JSONObject();
 
         // do we have an error?
@@ -49,42 +50,58 @@ public class LoginbuddyProviderUserinfo extends LoginbuddyProviderCommon {
                 access_token = authHeader.split(" ")[1];
             } else {
                 LOGGER.warning("the access_token is missing");
-                fakeUserinfoResponse.put("error", "invalid_request");
-                fakeUserinfoResponse.put("error_description", "the access_token is missing");
+                errorResponse.put("error", "invalid_request");
+                errorResponse.put("error_description", "the access_token is missing");
                 error = true;
             }
         }
 
-        SessionContext sessionValues = null;
+        SessionContext sessionContext = null;
         if (!error) {
             // Let's see if we know this access_token
-            sessionValues = (SessionContext) LoginbuddyCache.CACHE.get(access_token);
-            if (sessionValues == null || !access_token.equals(sessionValues.get(Constants.ACCESS_TOKEN.getKey()))) {
+            sessionContext = (SessionContext) LoginbuddyCache.CACHE.get(access_token.split("[.]")[2]);
+            if (sessionContext == null || !access_token.equals(sessionContext.get(Constants.ACCESS_TOKEN.getKey()))) {
                 LOGGER.warning("the access_token is invalid");
-                fakeUserinfoResponse.put("error", "invalid_request");
-                fakeUserinfoResponse.put("error_description", "the access_token is invalid");
+                errorResponse.put("error", "invalid_request");
+                errorResponse.put("error_description", "the access_token is invalid");
+                error = true;
+            }
+        }
+
+        if(!error && "dpop".equalsIgnoreCase(tokenType)) {
+            String dpopJkt = sessionContext.getString("dpop_jkt");
+            if(!compareJkt(request, dpopJkt)) {
+                LOGGER.warning("JKT values do not match");
+                errorResponse.put("error_description", "The jkt does not match the calculated one of the dpop-proof");
+                errorResponse.put("error", "invalid_request");
+                error = true;
+            }
+            if(!compareJktCnf(request, dpopJkt)) {
+                LOGGER.warning("JKT values do not match");
+                errorResponse.put("error_description", "The cnf-jkt does not match the calculated one of the dpop-proof");
+                errorResponse.put("error", "invalid_request");
                 error = true;
             }
         }
 
         if (!error) {
             // Check if the access_token has not expired yet
-            long expiration = sessionValues.getLong("access_token_expiration");
-            if (new Date().getTime() > expiration) {
+            long expiration = sessionContext.getLong("access_token_expiration");
+            if (nowInSeconds() > expiration) {
                 LOGGER.warning("the given access_token has expired");
-                fakeUserinfoResponse.put("error", "invalid_request");
-                fakeUserinfoResponse.put("error_description", "the given access_token has expired");
+                errorResponse.put("error", "invalid_request");
+                errorResponse.put("error_description", "the given access_token has expired");
                 error = true;
         }}
 
         String scope = "";
         if (!error) {
             // Check for at least scope 'openid'
-            scope = sessionValues.getString(Constants.SCOPE.getKey());
+            scope = sessionContext.getString(Constants.SCOPE.getKey());
             if (Stream.of(scope.split(" ")).noneMatch("openid"::equals)) {
                 LOGGER.warning("The given access_token has not been granted to access this API");
-                fakeUserinfoResponse.put("error", "invalid_request");
-                fakeUserinfoResponse.put("error_description", "The given access_token has not been granted to access this API");
+                errorResponse.put("error", "invalid_request");
+                errorResponse.put("error_description", "The given access_token has not been granted to access this API");
                 error = true;
             }
         }
@@ -93,8 +110,8 @@ public class LoginbuddyProviderUserinfo extends LoginbuddyProviderCommon {
 
             // Let's build the response message depending on scope values other than 'openid'
 
-            String clientId = sessionValues.getString(Constants.CLIENT_ID.getKey());
-            String email = sessionValues.getString("email");
+            String clientId = sessionContext.getString(Constants.CLIENT_ID.getKey());
+            String email = sessionContext.getString("email");
             String sub = getSub(clientId, email, false);
 
             fakeUserinfoResponse = new JSONObject();
@@ -115,11 +132,11 @@ public class LoginbuddyProviderUserinfo extends LoginbuddyProviderCommon {
             }
         }
 
-        int status = 200;
         if(error) {
-            status = 401;
+            response.setStatus(401);
+            response.getWriter().println(errorResponse.toJSONString());
         }
-        response.setStatus(status);
+        response.setStatus(200);
         response.getWriter().println(fakeUserinfoResponse.toJSONString());
     }
 }

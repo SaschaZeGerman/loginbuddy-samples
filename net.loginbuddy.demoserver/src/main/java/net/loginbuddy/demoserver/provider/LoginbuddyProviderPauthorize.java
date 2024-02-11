@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.loginbuddy.common.cache.LoginbuddyCache;
 import net.loginbuddy.common.config.Constants;
+import net.loginbuddy.common.util.Jwt;
 import net.loginbuddy.common.util.Pkce;
 import org.jose4j.base64url.Base64;
 import org.json.simple.JSONObject;
@@ -25,6 +26,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class LoginbuddyProviderPauthorize extends LoginbuddyProviderCommon {
@@ -99,15 +101,21 @@ public class LoginbuddyProviderPauthorize extends LoginbuddyProviderCommon {
         loginHint = "";
       }
 
+      // Need to remember all these values for the current session
+      SessionContext sessionContext = new SessionContext();
+
       // not by spec. required here, but if the token_type is dpop, let's check for the parameter and the header anyways ...
       if("dpop".equalsIgnoreCase(tokenType)) {
         if(checkForDpop(request, response)) return;
         if(checkForDpopJkt(request, response)) return;
         if(checkForDpopNonce(request, response)) return;
+        if(checkJktVsJwkJkt(request, response)) return;
+
+        String dpopJkt = request.getParameter("dpop_jkt");
+        sessionContext.put("dpop_jkt", dpopJkt);
+        LOGGER.info(String.format("Received dpop_jkt: %s", dpopJkt));
       }
 
-      // Need to remember all these values for the current session
-      SessionContext sessionContext = new SessionContext();
       sessionContext.sessionInit(
           clientId,
           scope,
@@ -117,6 +125,7 @@ public class LoginbuddyProviderPauthorize extends LoginbuddyProviderCommon {
           redirectUri,
           nonce,
           state);
+
       LoginbuddyCache.CACHE.put(sessionContext.getId(), sessionContext, 60L);
       String requestUri = String.format("urn:loginbuddy-samples:%s",  sessionContext.getId());
       LoginbuddyCache.CACHE.put(requestUri, loginHint, 60L);

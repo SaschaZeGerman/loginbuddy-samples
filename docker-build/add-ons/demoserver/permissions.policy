@@ -17,4 +17,7 @@ grant codeBase "file:${catalina.home}/webapps/ROOT/-" {
 
     // permission to check if dpop token type should be issued
     permission java.lang.RuntimePermission "getenv.DEMOSERVER_TOKEN_TYPE";
+
+    // for extracting the dpop header of the request
+    permission java.lang.RuntimePermission "createClassLoader";
 };

@@ -41,11 +41,13 @@ public class SessionContext extends LoginbuddyContext implements Serializable {
   }
 
   public long sessionToken(String access_token, String refresh_token, String id_token) {
+    long now = LoginbuddyProviderCommon.nowInSeconds();
     put("access_token", access_token);
     put("refresh_token", refresh_token);
     put("id_token", id_token);
-    put("access_token_expiration", new Date().getTime() + 3600000); // getTime should be 10-digits (seconds) but it is millis (13-digits)
-    put("refresh_token_expiration", new Date().getTime() + 7200000);
-    return 3600; // accessToken lifetime
+    put("access_token_expiration", now + 600L);
+    put("refresh_token_expiration", now + 3600L);
+    put("refresh_token_lifetime", 3600L);
+    return 600; // accessToken lifetime
   }
 }
