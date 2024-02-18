@@ -138,6 +138,7 @@ services:
       - "DEMOSERVER_SSL_PORT=8443"
       - "DEMOSERVER_HOSTNAME=demoserver.loginbuddy.net"
       - "DEMOSERVER_LOCATION=https://demoserver.loginbuddy.net:8443"
+      - "DEMOSERVER_TOKEN_TYPE=Bearer"
     volumes:
       - ./dev/loginbuddy_server.p12:/usr/local/tomcat/ssl/loginbuddy.p12
 

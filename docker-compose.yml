@@ -63,7 +63,7 @@ services:
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "HOSTNAME_LOGINBUDDY=local.loginbuddy.net"
       - "SECRET_OBFUSCATION=${SECRET_OBFUSCATION}"
-#      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
+      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
 
   loginbuddy-sidecar:
     image: saschazegerman/loginbuddy:latest
@@ -76,6 +76,7 @@ services:
       - "SUPPORT_OIDCDR=true"
       - "SSL_TRUSTED_SERVER=loginbuddy-demoserver:8443"
       - "SECRET_OBFUSCATION=${SECRET_OBFUSCATION}"
+      - "HAZELCAST=hazelcast1:5701,hazelcast2:5701"
     volumes:
       - ./docker-build/add-ons/loginbuddy-sidecar/permissions.policy:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/permissions.policy
       - ./docker-build/add-ons/loginbuddy-sidecar/config.json:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config.json
@@ -89,14 +90,14 @@ services:
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8002"
 
-#  hazelcast1:
-#    image: hazelcast/hazelcast
-#    restart: always
-#    environment:
-#      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast1:5701"
-#
-#  hazelcast2:
-#    image: hazelcast/hazelcast
-#    restart: always
-#    environment:
-#      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast2:5701"
+  hazelcast1:
+    image: hazelcast/hazelcast
+    restart: always
+    environment:
+      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast1:5701"
+
+  hazelcast2:
+    image: hazelcast/hazelcast
+    restart: always
+    environment:
+      - "JAVA_OPTS=-Dhazelcast:local:publicAddress=hazelcast2:5701"
