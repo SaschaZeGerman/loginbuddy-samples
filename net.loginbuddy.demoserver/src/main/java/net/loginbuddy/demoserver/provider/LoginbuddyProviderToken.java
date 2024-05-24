@@ -18,6 +18,7 @@ import net.loginbuddy.common.util.Pkce;
 import org.jose4j.jws.JsonWebSignature;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -252,6 +253,14 @@ public class LoginbuddyProviderToken extends LoginbuddyProviderCommon {
 
             fakeProviderResponse.put("id_token", id_token);
             fakeProviderResponse.put("scope", sessionContext.get(Constants.SCOPE.getKey()));
+            if(sessionContext.get(Constants.AUTHORIZATION_DETAILS.getKey()) != null) {
+                try {
+                    fakeProviderResponse.put("authorization_details", new JSONParser().parse((String)sessionContext.get(Constants.AUTHORIZATION_DETAILS.getKey())));
+                } catch (ParseException e) {
+                    LOGGER.warning("This should never occur!");
+                    LOGGER.warning(e.getMessage());
+                }
+            }
 
         } else {
             LOGGER.warning(String.format("The given grant_type is not supported: %s", grant_type));

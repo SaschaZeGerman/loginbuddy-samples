@@ -1,4 +1,6 @@
-<%--
+<%@ page import="net.loginbuddy.common.cache.LoginbuddyCache" %>
+<%@ page import="net.loginbuddy.demoserver.provider.SessionContext" %>
+<%@ page import="net.loginbuddy.common.config.Constants" %><%--
   ~ Copyright (c) 2018. . All rights reserved.
   ~                            
   ~ This software may be modified and distributed under the terms of the Apache License 2.0 license.
@@ -45,8 +47,16 @@
     <h1>Login with Loginbuddy-Demoserver!</h1>
     <hr/>
     <h3>Consent</h3>
-    <p>Application <strong>Loginbuddy Test Client</strong> would like to access the following information:</p>
-    <code>Your email-address, your profile and your ID (remember, this is completely fake for this demo!)</code>
+    <p>Application <strong>Loginbuddy Test Client</strong> would like to access the following information (remember, this is completely fake for this demo!):</p>
+    <%
+        SessionContext sessionCtx = (SessionContext)LoginbuddyCache.CACHE.get(request.getParameter("session"));
+        String scope = sessionCtx.get(Constants.SCOPE.getKey(), String.class);
+        String authorizationDetails = sessionCtx.get(Constants.AUTHORIZATION_DETAILS.getKey(), String.class);
+    %>
+    <code>OAuth SCOPE: <%=scope%></code>
+    <br/>
+
+    <code>authorization_details: <%=authorizationDetails%></code>
     <form action="consent" enctype="application/x-www-form-urlencoded" method="post">
         <div class="form-group">
             <input type="hidden" name="session" value="<%=request.getParameter("session")%>">

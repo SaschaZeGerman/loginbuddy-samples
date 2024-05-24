@@ -13,7 +13,7 @@ public class SessionContext extends LoginbuddyContext implements Serializable {
   }
 
   public void sessionInit(String clientId, String scope, String response_type, String code_challenge,
-      String code_challenge_method, String redirectUri, String nonce, String state) {
+      String code_challenge_method, String redirectUri, String nonce, String state, String authorizationDetails) {
     put(Constants.CLIENT_ID.getKey(), clientId);
     put(Constants.SCOPE.getKey(), scope);
     put(Constants.RESPONSE_TYPE.getKey(), response_type);
@@ -24,6 +24,7 @@ public class SessionContext extends LoginbuddyContext implements Serializable {
     put(Constants.STATE.getKey(), state);
     put(Constants.SESSION.getKey(), getId());
     put(Constants.ACTION_EXPECTED.getKey(), Constants.ACTION_LOGIN.getKey());
+    put(Constants.AUTHORIZATION_DETAILS.getKey(), authorizationDetails);
   }
 
   public void sessionLoginProvided(String usernameLabel, String username) {

@@ -62,11 +62,10 @@
             <label for="provider">Provider (type 'server_loginbuddy' to skip the next screen. Leave it blank the first time you try)</label>
             <input type="text" id="provider" name="provider" class="form-control" size="80">
         </div>
-        <input type="hidden" id="client_id" name="client_id" size="80" readonly class="form-control" value="clientIdForTestingPurposes">
-        <input type="hidden" id="obfuscate_token" name="obfuscate_token" size="5" class="form-control" readonly value="false">
-        <input type="hidden" name="provider_addition" value="">
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <br/>
+        <div class="form-group">
+            <label for="authorizationDetails">Submit 'authorization_details' as specified in RFC 9396 (RAR) if the target provider supports it (max. 600 characters)</label>
+            <input type="text" id="authorizationDetails" name="authorization_details" class="form-control" placeholder='[{"type":"https://demoserver.loginbuddy.net:8443/rar/type"}]' size="600">
+        </div>
         <input class="form-check-input" type="radio" value="" id="idResponseAsJwt" name="idSignAlg" onclick="return selectClientId('clientIdForTestingPurposesJwt');">
         <label class="form-check-label" for="idResponseAsJwt"> receive final response as signed JWT (RS256)</label>
         <br/>
@@ -75,6 +74,11 @@
         <br/>
         <input class="form-check-input" type="checkbox" value="" id="idObfuscateToken" onclick="return obfuscateProviderToken();">
         <label class="form-check-label" for="idObfuscateToken"> obfuscate identity providers access_token and refresh_token</label>
+        <input type="hidden" id="client_id" name="client_id" size="80" readonly class="form-control" value="clientIdForTestingPurposes">
+        <input type="hidden" id="obfuscate_token" name="obfuscate_token" size="5" class="form-control" readonly value="false">
+        <input type="hidden" name="provider_addition" value="">
+        <br/>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <hr/>
     <p>Providers below are supported via <strong>loginbuddy-sidecar</strong>.</p>
