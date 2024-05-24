@@ -30,7 +30,7 @@ Clone Loginbuddy:
   - `cd ..`
 - `git clone https://github.com/SaschaZeGerman/loginbuddy-tools.git`  // this is needed due to dependencies that are not yet hosted on maven central
   - `cd ./loginbuddy-tools`
-  - `mvn clean install`
+  - `make build_all`
   - `cd ..`
 
 Clone this samples project:
@@ -141,7 +141,7 @@ You need to update a few files:
 
 - **./docker-build/add-ons/loginbuddy/config.json**
   - add a provider configuration for Google
-  - copy the example **provider: google** from *./docker-build/add-ons/templates/config_common_providers.json* into the provider section of *config.json* and fill in *client_id, client_secret*
+    - copy the example **provider: google** from *./docker-build/add-ons/templates/config_common_providers.json* into the provider section of *config.json* and fill in *client_id, client_secret*
 - **./docker-build/add-ons/loginbuddy/permissions.policy**
   - Uncomment these lines:
     -     permission java.net.SocketPermission "accounts.google.com", "connect,resolve";
