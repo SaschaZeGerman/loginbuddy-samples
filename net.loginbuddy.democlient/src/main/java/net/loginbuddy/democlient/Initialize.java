@@ -53,15 +53,17 @@ public class Initialize extends LoginbuddyDemoclientCommon {
         String clientProvider = Sanetizer.sanetize(clientProviderResult.getValue(), 64);
 
         ParameterValidatorResult authorizationDetailsResult = ParameterValidator
-                .getSingleValue(request.getParameterValues(Constants.AUTHORIZATION_DETAILS.getKey()));
+                .getSingleValue(request.getParameterValues(Constants.AUTHORIZATION_DETAILS.getKey()), "");
         String authorizationDetails = authorizationDetailsResult.getValue();
-        try {
-            new JSONParser().parse(authorizationDetails);
-        } catch (ParseException e) {
-            LOGGER.warning(String.format("The given authorization_details are not JSON: %s", e.getMessage()));
-            authorizationDetails = "";
+        if(!"".equals(authorizationDetails)) {
+            try {
+                new JSONParser().parse(authorizationDetails);
+            } catch (ParseException e) {
+                LOGGER.warning(String.format("The given authorization_details are not JSON: %s", e.getMessage()));
+                authorizationDetails = "";
+            }
         }
-        String clientAuthorizationDetails = authorizationDetails == null ? "" : String.format("&authorization_details=%s", HttpHelper.urlEncode(authorizationDetails));
+        String clientAuthorizationDetails = "".equals(authorizationDetails) ? "" : String.format("&authorization_details=%s", HttpHelper.urlEncode(authorizationDetails));
 
         ParameterValidatorResult clientObfuscateTokenResult = ParameterValidator
                 .getSingleValue(request.getParameterValues(Constants.OBFUSCATE_TOKEN.getKey()));
